@@ -1,9 +1,6 @@
 // Component imports
 import LevelSlider from "./LevelSlider";
 
-// Helper imports
-import { getWeaponLevelCost } from "helpers/getLevelUpCosts";
-
 // Type imports
 import { WeaponCostObject } from "types/costs";
 import { CardMode } from "./PlannerCard";
@@ -22,12 +19,10 @@ function WeaponSliders({
             variant="weapon"
             title="Level"
             levels={weaponLevel}
+            values={weapon.values.level}
             path={weapon.path}
             rarity={weapon.rarity}
-            dispatchProps={{
-                type: "level",
-                getCost: getWeaponLevelCost,
-            }}
+            type="level"
         />
     );
 }

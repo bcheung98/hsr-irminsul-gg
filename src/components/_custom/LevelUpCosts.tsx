@@ -336,12 +336,12 @@ function getCosts({
             } as TotalCostObject;
             break;
         case "traceMain":
-            levelUpCost = getCharacterTraceMain(
-                unlock as "A2" | "A4" | "A6",
+            levelUpCost = getCharacterTraceMain({
+                node: unlock as "A2" | "A4" | "A6",
                 rarity,
-                true,
-                path
-            );
+                selected: true,
+                path,
+            });
             costs = {
                 credits: {
                     Credit: levelUpCost.credits.Credit,
@@ -365,7 +365,12 @@ function getCosts({
             } as TotalCostObject;
             break;
         case "traceSmall":
-            levelUpCost = getCharacterTraceSmall(unlock, rarity, true, path);
+            levelUpCost = getCharacterTraceSmall({
+                node: unlock,
+                rarity,
+                selected: true,
+                path,
+            });
             costs = {
                 credits: {
                     Credit: levelUpCost.credits.Credit,

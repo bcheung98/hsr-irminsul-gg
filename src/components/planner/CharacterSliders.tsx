@@ -1,6 +1,7 @@
 // Component imports
 import LevelSlider from "./LevelSlider";
 import StatNode from "./StatNode";
+import { FlexBox } from "styled/StyledBox";
 
 // MUI imports
 import { Divider, Stack } from "@mui/material";
@@ -9,16 +10,15 @@ import Grid from "@mui/material/Grid2";
 // Helper imports
 import { range } from "helpers/utils";
 import { getElementColor } from "helpers/elementColors";
-import {
-    getCharacterLevelCost,
-    getCharacterMemosprite,
-    getCharacterSkillCost,
-} from "helpers/getLevelUpCosts";
 import { useAppSelector } from "helpers/hooks";
 import { selectCharacters } from "reducers/character";
 
 // Type imports
-import { CharacterCostObject, UpdateCostsPayload } from "types/costs";
+import {
+    CharacterCostObject,
+    CostSliderData,
+    UpdateCostsPayload,
+} from "types/costs";
 import { CardMode } from "./PlannerCard";
 import { Character } from "types/character";
 
@@ -33,6 +33,7 @@ function CharacterSliders({
     const char = useAppSelector(selectCharacters).find(
         (c) => c.name === character.name
     ) as Character;
+    const values = character.values;
 
     const rarity = character.name.startsWith("Trailblazer") ? 4 : char.rarity;
 
@@ -41,55 +42,55 @@ function CharacterSliders({
         icon?: string;
         levels: (string | number)[];
         type: UpdateCostsPayload["type"];
-        fn: Function;
+        values: CostSliderData;
     }[] = [
         {
             title: "Level",
             levels: charLevel,
             type: "level",
-            fn: getCharacterLevelCost,
+            values: values.level,
         },
         {
             title: "Basic ATK",
             icon: `characters/skills/${name}_attack`,
             levels: skillLevel.slice(0, 6),
             type: "attack",
-            fn: getCharacterSkillCost,
+            values: values.attack,
         },
         {
             title: "Skill",
             icon: `characters/skills/${name}_skill`,
             levels: skillLevel,
             type: "skill",
-            fn: getCharacterSkillCost,
+            values: values.skill,
         },
         {
             title: "Ultimate",
             icon: `characters/skills/${name}_ultimate`,
             levels: skillLevel,
             type: "ultimate",
-            fn: getCharacterSkillCost,
+            values: values.ultimate,
         },
         {
             title: "Talent",
             icon: `characters/skills/${name}_talent`,
             levels: skillLevel,
             type: "talent",
-            fn: getCharacterSkillCost,
+            values: values.talent,
         },
         {
             title: "Memosprite Skill",
             icon: `characters/skills/${name}_ms_skill`,
             levels: skillLevel.slice(0, 6),
             type: "memospriteSkill",
-            fn: getCharacterMemosprite,
+            values: values.memospriteSkill,
         },
         {
             title: "Memosprite Talent",
             icon: `characters/skills/${name}_ms_talent`,
             levels: skillLevel.slice(0, 6),
             type: "memospriteTalent",
-            fn: getCharacterMemosprite,
+            values: values.memospriteTalent,
         },
     ];
 
@@ -112,24 +113,14 @@ function CharacterSliders({
             rarity={rarity}
             path={character.path}
             levels={slider.levels}
+            values={slider.values}
             color={getElementColor({ element: character.element })}
-            dispatchProps={{
-                type: slider.type,
-                getCost: slider.fn,
-            }}
+            type={slider.type}
         />
     ));
 
     return (
-        <Stack
-            spacing={2}
-            direction={mode === "view" ? { xs: "column", md: "row" } : "column"}
-            alignItems={
-                mode === "view"
-                    ? { xs: "space-between", md: "flex-start" }
-                    : "left"
-            }
-        >
+        <Stack spacing={2} divider={<Divider />}>
             <Grid container rowSpacing={1} columnSpacing={4}>
                 <Grid size={12}>{Level}</Grid>
                 {[Attack, Skill, Ultimate, Talent].map((slider, index) => (
@@ -137,7 +128,7 @@ function CharacterSliders({
                         key={index}
                         size={
                             mode === "view"
-                                ? { xs: 6, md: 12 }
+                                ? { xs: 6, sm: 3 }
                                 : { xs: 12, sm: 6 }
                         }
                     >
@@ -150,7 +141,7 @@ function CharacterSliders({
                             key={index}
                             size={
                                 mode === "view"
-                                    ? { xs: 6, md: 12 }
+                                    ? { xs: 6, sm: 3 }
                                     : { xs: 12, sm: 6 }
                             }
                         >
@@ -158,21 +149,27 @@ function CharacterSliders({
                         </Grid>
                     ))}
             </Grid>
-            <Stack spacing={2}>
-                <Stack spacing={2} divider={<Divider />} sx={{ px: "8px" }}>
-                    {char.traces.map((trace, index) => (
-                        <StatNode
-                            key={index}
-                            mode={mode}
-                            id={`${String.fromCharCode(index + 65)}-1`}
-                            name={character.name}
-                            rarity={rarity}
-                            path={character.path}
-                            trace={trace}
-                        />
-                    ))}
-                </Stack>
-            </Stack>
+            <FlexBox
+                sx={{
+                    flexWrap: "wrap",
+                    rowGap: "16px",
+                    columnGap: "32px",
+                    px: "8px",
+                }}
+            >
+                {char.traces.map((trace, index) => (
+                    <StatNode
+                        key={index}
+                        mode={mode}
+                        id={`${String.fromCharCode(index + 65)}-1`}
+                        name={character.name}
+                        rarity={rarity}
+                        path={character.path}
+                        trace={trace}
+                        values={values.trace}
+                    />
+                ))}
+            </FlexBox>
         </Stack>
     );
 }

@@ -48,6 +48,7 @@ function CharacterSelector() {
             multiple
             autoComplete
             filterSelectedOptions
+            disableClearable
             options={options}
             getOptionLabel={(option) => option.fullName}
             filterOptions={(options, { inputValue }) =>
@@ -64,11 +65,24 @@ function CharacterSelector() {
             noOptionsText="No Characters"
             value={values}
             isOptionEqualToValue={(option, value) => option.name === value.name}
-            onChange={(_: any, newValue: CharacterCostObject[] | null) =>
+            onChange={(
+                event,
+                newValue: CharacterCostObject[] | null,
+                reason
+            ) => {
+                if (
+                    event.type === "keydown" &&
+                    ((event as React.KeyboardEvent).key === "Backspace" ||
+                        (event as React.KeyboardEvent).key === "Delete") &&
+                    reason === "removeOption"
+                ) {
+                    return;
+                }
                 dispatch(
                     setPlannerCharacters(newValue as CharacterCostObject[])
-                )
-            }
+                );
+            }}
+            renderTags={() => null}
             renderInput={(params) => (
                 <SearchBar
                     params={params}
@@ -153,11 +167,13 @@ function createOptions(characters: Character[]) {
     return characters.map(
         (char) =>
             ({
+                id: `character_${char.id}`,
                 name: char.name,
                 fullName: char.fullName,
                 rarity: char.rarity,
                 element: char.element,
                 path: char.path,
+                release: char.release,
                 traceIDs: characterTraceIDs[char.path],
                 costs: {
                     // Source of each material is mapped to a specific index in the array:
@@ -197,6 +213,16 @@ function createOptions(characters: Character[]) {
                         [`${char.materials.commonMat}3` as CommonMaterial]:
                             costArray,
                     },
+                },
+                values: {
+                    level: {},
+                    attack: {},
+                    skill: {},
+                    ultimate: {},
+                    talent: {},
+                    trace: {},
+                    memospriteSkill: {},
+                    memospriteTalent: {},
                 },
             } as CharacterCostObject)
     );

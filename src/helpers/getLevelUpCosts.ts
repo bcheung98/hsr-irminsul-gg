@@ -195,12 +195,17 @@ export function getCharacterMemosprite({
     } as PayloadCostObject;
 }
 
-export function getCharacterTraceMain(
-    node: Extract<CharacterUnlockKeys, "A2" | "A4" | "A6">,
-    rarity: Rarity,
-    selected: boolean,
-    path: Path
-) {
+export function getCharacterTraceMain({
+    node,
+    rarity,
+    selected,
+    path,
+}: {
+    node: Extract<CharacterUnlockKeys, "A2" | "A4" | "A6">;
+    rarity: Rarity;
+    selected: boolean;
+    path: Path;
+}) {
     const costs =
         path === "Remembrance"
             ? { ...characterTraceMainCostsRemembrance[node] }
@@ -233,12 +238,17 @@ export function getCharacterTraceMain(
     } as PayloadCostObject;
 }
 
-export function getCharacterTraceSmall(
-    node: CharacterUnlockKeys,
-    rarity: Rarity,
-    selected: boolean,
-    path: Path
-) {
+export function getCharacterTraceSmall({
+    node,
+    rarity,
+    selected,
+    path,
+}: {
+    node: CharacterUnlockKeys;
+    rarity: Rarity;
+    selected: boolean;
+    path: Path;
+}) {
     const costs =
         path === "Remembrance"
             ? { ...characterTraceSmallCostsRemembrance[node] }

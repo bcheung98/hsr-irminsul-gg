@@ -15,7 +15,7 @@ import { useAppDispatch } from "helpers/hooks";
 import { updateCharacterCosts, updateWeaponCosts } from "reducers/planner";
 
 // Type imports
-import { UpdateCostsPayload } from "types/costs";
+import { CostSliderData, UpdateCostsPayload } from "types/costs";
 import { CardMode } from "./PlannerCard";
 import { Path, Rarity } from "types/_common";
 
@@ -26,12 +26,10 @@ interface LevelSliderProps {
     title: string;
     icon?: string;
     levels: (string | number)[];
+    values: CostSliderData;
     rarity?: Rarity;
     path: Path;
-    dispatchProps: {
-        type: UpdateCostsPayload["type"];
-        getCost: Function;
-    };
+    type: UpdateCostsPayload["type"];
     color?: string;
 }
 
@@ -42,9 +40,10 @@ function LevelSlider({
     title,
     icon,
     levels,
+    values,
     rarity = 3,
     path,
-    dispatchProps,
+    type,
     color,
 }: LevelSliderProps) {
     const theme = useTheme();
@@ -53,18 +52,21 @@ function LevelSlider({
     const dispatch = useAppDispatch();
 
     let threshold = "@250";
-    if (dispatchProps.type === "level") {
+    if (type === "level") {
         threshold = "@375";
     }
 
-    const [selected, setSelected] = useState(true);
+    const [selected, setSelected] = useState(values.selected ?? true);
     const handleSelect = () => {
         setSelected(!selected);
     };
 
     const minDistance = 1;
     const maxValue = levels.length;
-    const [sliderValue, setSliderValue] = useState([1, maxValue]);
+    const [sliderValue, setSliderValue] = useState([
+        values.start ?? 1,
+        values.stop ?? maxValue,
+    ]);
     const handleSliderChange = (
         _: Event,
         newValue: number | number[],
@@ -108,17 +110,16 @@ function LevelSlider({
             dispatch(
                 updateCharacterCosts({
                     name: name,
-                    type: dispatchProps.type,
-                    costs: dispatchProps.getCost({
+                    type: type,
+                    data: {
                         start: sliderValue[0],
                         stop: sliderValue[1],
                         selected: selected,
                         name: name,
                         rarity: rarity,
                         path: path,
-                        skillKey: dispatchProps.type,
-                        withXP: true,
-                    }),
+                        skillKey: type,
+                    },
                 })
             );
         } else {
@@ -126,13 +127,12 @@ function LevelSlider({
                 updateWeaponCosts({
                     name: name,
                     type: "level",
-                    costs: dispatchProps.getCost({
+                    data: {
                         start: sliderValue[0],
                         stop: sliderValue[1],
                         selected: selected,
                         rarity: rarity,
-                        withXP: true,
-                    }),
+                    },
                 })
             );
         }
@@ -187,7 +187,7 @@ function LevelSlider({
                             textTransform: "capitalize",
                         }}
                     >
-                        {dispatchProps.type === "level" && `Level: `}
+                        {type === "level" && `Level: `}
                         {selected
                             ? `${levels[sliderValue[0] - 1]} → ${
                                   levels[sliderValue[1] - 1]

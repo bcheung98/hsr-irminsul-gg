@@ -1,6 +1,6 @@
 import { characterLevel, characterSkill, weaponLevel } from "data/levelUpCosts";
-import { NestedKeyOf } from "./_common";
-import { Character } from "./character";
+import { NestedKeyOf, Path, Rarity } from "./_common";
+import { Character, CharacterUnlockKeys } from "./character";
 import { Weapon } from "./weapon";
 import {
     CharacterXPMaterial,
@@ -49,10 +49,35 @@ export enum CostObjectSourceIndex {
     memospriteTalent,
 }
 
+export interface CostSliderData {
+    start: number;
+    stop: number;
+    selected: boolean;
+}
+
+export type CostNodeData = Pick<CostSliderData, "selected">;
+export type TraceCostNodeValues = Record<string, CostNodeData>;
+
+export type CostSliderValues = Record<
+    keyof typeof CostObjectSourceIndex,
+    CostSliderData
+> & { trace: TraceCostNodeValues };
+
+export type CharacterCostSliderValues = CostSliderValues;
+export type WeaponCostSliderValues = Pick<CostSliderValues, "level">;
+
+export interface PayloadData extends Partial<CostSliderData> {
+    name?: string;
+    rarity?: Rarity;
+    path?: Path;
+    skillKey?: keyof typeof CostObjectSourceIndex;
+    node?: CharacterUnlockKeys;
+}
+
 export interface UpdateCostsPayload {
     name: string;
     type: keyof typeof CostObjectSourceIndex;
-    costs: PayloadCostObject;
+    data: PayloadData;
     traceID?: string;
 }
 
@@ -69,9 +94,11 @@ export interface CharacterCost {
 export interface CharacterCostObject
     extends Pick<
         Character,
-        "name" | "fullName" | "rarity" | "element" | "path"
+        "name" | "fullName" | "rarity" | "element" | "path" | "release"
     > {
+    id: string;
     costs: CharacterCost;
+    values: CharacterCostSliderValues;
     traceIDs: string[];
 }
 
@@ -83,6 +110,11 @@ export interface WeaponCost {
 }
 
 export interface WeaponCostObject
-    extends Pick<Weapon, "name" | "displayName" | "rarity" | "path"> {
+    extends Pick<
+        Weapon,
+        "name" | "displayName" | "rarity" | "path" | "release"
+    > {
+    id: string;
     costs: WeaponCost;
+    values: WeaponCostSliderValues;
 }

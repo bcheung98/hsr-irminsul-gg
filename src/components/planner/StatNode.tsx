@@ -13,10 +13,6 @@ import { updateCharacterCosts } from "reducers/planner";
 import { formatCharacterBonusStats } from "helpers/formatCharacterBonusStats";
 import { characterBonusStats } from "data/characterBonusStats";
 import { parseSkillDescription } from "helpers/parseSkillDescription";
-import {
-    getCharacterTraceMain,
-    getCharacterTraceSmall,
-} from "helpers/getLevelUpCosts";
 
 // Type imports
 import { CardMode } from "./PlannerCard";
@@ -25,6 +21,7 @@ import {
     CharacterTraceNodeSmall,
 } from "types/character";
 import { Path, Rarity } from "types/_common";
+import { TraceCostNodeValues } from "types/costs";
 
 interface StatNodeProps {
     mode: CardMode;
@@ -33,15 +30,24 @@ interface StatNodeProps {
     rarity: Rarity;
     path: Path;
     trace: CharacterTraceNodeMain | CharacterTraceNodeSmall;
+    values: TraceCostNodeValues;
 }
 
-function StatNode({ mode, id, name, rarity, path, trace }: StatNodeProps) {
+function StatNode({
+    mode,
+    id,
+    name,
+    rarity,
+    path,
+    trace,
+    values,
+}: StatNodeProps) {
     const theme = useTheme();
     const matches_sm_dn = useMediaQuery(theme.breakpoints.down("sm"));
 
     const dispatch = useAppDispatch();
 
-    const [selected, setSelected] = useState(true);
+    const [selected, setSelected] = useState(values[id]?.selected ?? true);
     const handleSelect = () => {
         setSelected(!selected);
     };
@@ -72,26 +78,21 @@ function StatNode({ mode, id, name, rarity, path, trace }: StatNodeProps) {
                 name: name,
                 type: type === "main" ? "traceMain" : "traceSmall",
                 traceID: id,
-                costs:
-                    type === "main"
-                        ? getCharacterTraceMain(
-                              unlock as "A2" | "A4" | "A6",
-                              rarity,
-                              selected,
-                              path
-                          )
-                        : getCharacterTraceSmall(
-                              unlock,
-                              rarity,
-                              selected,
-                              path
-                          ),
+                data: {
+                    node:
+                        type === "main"
+                            ? (unlock as "A2" | "A4" | "A6")
+                            : unlock,
+                    rarity,
+                    selected,
+                    path,
+                },
             })
         );
     }, [selected]);
 
     return (
-        <Stack direction="row" alignItems="center" spacing={3}>
+        <Stack direction="row" alignItems="center" spacing={{ xs: 2, sm: 3 }}>
             <Image
                 id={`plannerCard-${name}-${id}`}
                 src={imgSrc}
@@ -126,6 +127,7 @@ function StatNode({ mode, id, name, rarity, path, trace }: StatNodeProps) {
                                     rarity={rarity}
                                     path={path}
                                     trace={subTrace}
+                                    values={values}
                                 />
                                 <Xarrow
                                     start={`plannerCard-${name}-${id}`}
