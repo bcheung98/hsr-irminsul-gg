@@ -13,18 +13,15 @@ import Grid from "@mui/material/Grid2";
 // Helper imports
 import { getRarityColor } from "helpers/rarityColors";
 import { zoomImageOnHover } from "helpers/utils";
-import { formatWeeklyBossMaterials } from "data/materials/weeklyBossMaterials";
-import { formatCalyxMaterials } from "data/materials/calyxMaterials";
-import { formatCommonMaterials } from "data/materials/commonMaterials";
+import { formatMaterialName } from "helpers/materials";
+import { getCalyxMaterial } from "data/materials/calyxMaterials";
+import { getCommonMaterial } from "data/materials/commonMaterials";
+import { getWeeklyBossMaterial } from "data/materials/weeklyBossMaterials";
+import { getBossMaterial } from "data/materials/bossMaterials";
 
 // Type imports
 import { Element, Rarity, Path } from "types/_common";
-import {
-    CalyxMaterialKeys,
-    CommonMaterialKeys,
-    Materials,
-    WeeklyBossMaterial,
-} from "types/materials";
+import { CharacterMaterials } from "types/materials";
 
 interface InfoCardProps {
     name: string;
@@ -39,7 +36,7 @@ interface InfoCardProps {
         element?: Element;
         path?: Path;
     };
-    materials?: Materials;
+    materials?: CharacterMaterials;
     backgroundColor?: string;
     disableTooltip?: boolean;
     disableLink?: boolean;
@@ -277,7 +274,7 @@ function MaterialGrid({
     materials,
     size,
 }: {
-    materials: Materials;
+    materials: CharacterMaterials;
     size: string;
 }) {
     const theme = useTheme();
@@ -287,19 +284,21 @@ function MaterialGrid({
     const images = [
         {
             src: `materials/calyx/${calyxMat}3`,
-            tag: formatCalyxMaterials(calyxMat as CalyxMaterialKeys),
+            tag: formatMaterialName(getCalyxMaterial({ tag: calyxMat })),
         },
         {
             src: `materials/common/${commonMat}3`,
-            tag: formatCommonMaterials(commonMat as CommonMaterialKeys),
+            tag: formatMaterialName(getCommonMaterial({ tag: commonMat })),
         },
         {
             src: `materials/boss/${bossMat}`,
-            tag: bossMat,
+            tag: formatMaterialName(getBossMaterial({ tag: bossMat })),
         },
         {
             src: `materials/weekly/${weeklyBossMat}`,
-            tag: formatWeeklyBossMaterials(weeklyBossMat as WeeklyBossMaterial),
+            tag: formatMaterialName(
+                getWeeklyBossMaterial({ tag: weeklyBossMat })
+            ),
         },
     ];
 

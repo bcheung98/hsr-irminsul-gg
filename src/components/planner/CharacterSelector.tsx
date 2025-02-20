@@ -16,16 +16,14 @@ import { selectCharacters } from "reducers/character";
 import { getSelectedCharacters, setPlannerCharacters } from "reducers/planner";
 import { getBackgroundColor, getRarityColor } from "helpers/rarityColors";
 import { characterTraceIDs } from "data/characterTraceIds";
+import { getBossMaterial } from "data/materials/bossMaterials";
+import { getWeeklyBossMaterial } from "data/materials/weeklyBossMaterials";
+import { getCalyxMaterial } from "data/materials/calyxMaterials";
+import { getCommonMaterial } from "data/materials/commonMaterials";
 
 // Type imports
 import { Character } from "types/character";
 import { CharacterCostObject } from "types/costs";
-import {
-    BossMaterial,
-    CalyxMaterial,
-    CommonMaterial,
-    WeeklyBossMaterial,
-} from "types/materials";
 
 function CharacterSelector() {
     const theme = useTheme();
@@ -187,31 +185,38 @@ function createOptions(characters: Character[]) {
                         CharacterXP3: costArray,
                     },
                     bossMat: {
-                        [`${char.materials.bossMat}` as BossMaterial]:
+                        [getBossMaterial({ tag: char.materials.bossMat })?.id!]:
                             costArray,
                     },
                     weeklyBossMat: {
-                        [`${char.materials.weeklyBossMat}` as WeeklyBossMaterial]:
-                            costArray,
+                        [getWeeklyBossMaterial({
+                            tag: char.materials.weeklyBossMat,
+                        })?.id!]: costArray,
                     },
                     tracksOfDestiny: {
                         "Tracks of Destiny": costArray,
                     },
                     calyxMat: {
-                        [`${char.materials.calyxMat}1` as CalyxMaterial]:
-                            costArray,
-                        [`${char.materials.calyxMat}2` as CalyxMaterial]:
-                            costArray,
-                        [`${char.materials.calyxMat}3` as CalyxMaterial]:
-                            costArray,
+                        [getCalyxMaterial({
+                            tag: `${char.materials.calyxMat}1`,
+                        })?.id!]: costArray,
+                        [getCalyxMaterial({
+                            tag: `${char.materials.calyxMat}2`,
+                        })?.id!]: costArray,
+                        [getCalyxMaterial({
+                            tag: `${char.materials.calyxMat}3`,
+                        })?.id!]: costArray,
                     },
                     commonMat: {
-                        [`${char.materials.commonMat}1` as CommonMaterial]:
-                            costArray,
-                        [`${char.materials.commonMat}2` as CommonMaterial]:
-                            costArray,
-                        [`${char.materials.commonMat}3` as CommonMaterial]:
-                            costArray,
+                        [getCommonMaterial({
+                            tag: `${char.materials.commonMat}1`,
+                        })?.id!]: costArray,
+                        [getCommonMaterial({
+                            tag: `${char.materials.commonMat}2`,
+                        })?.id!]: costArray,
+                        [getCommonMaterial({
+                            tag: `${char.materials.commonMat}3`,
+                        })?.id!]: costArray,
                     },
                 },
                 values: {
@@ -224,6 +229,7 @@ function createOptions(characters: Character[]) {
                     memospriteSkill: {},
                     memospriteTalent: {},
                 },
+                dataFormat: "v2",
             } as CharacterCostObject)
     );
 }

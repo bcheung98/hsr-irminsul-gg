@@ -24,23 +24,19 @@ import {
     setRarity,
 } from "reducers/weaponFilters";
 import { paths, rarities } from "data/common";
+import { formatMaterialName, getMaterialKeyNames } from "helpers/materials";
 import {
-    filteredCalyxMaterials,
-    formatCalyxMaterials,
+    calyxMaterials,
+    getCalyxMaterial,
 } from "data/materials/calyxMaterials";
 import {
-    filteredCommonMaterials,
-    formatCommonMaterials,
+    commonMaterials,
+    getCommonMaterial,
 } from "data/materials/commonMaterials";
 
 // Type imports
 import { Path, Rarity } from "types/_common";
-import {
-    CalyxMaterial,
-    CalyxMaterialKeys,
-    CommonMaterial,
-    CommonMaterialKeys,
-} from "types/materials";
+import { CalyxMaterial, CommonMaterial } from "types/materials";
 
 function WeaponFilters({ handleClose }: { handleClose: (arg0: any) => void }) {
     const theme = useTheme();
@@ -56,7 +52,7 @@ function WeaponFilters({ handleClose }: { handleClose: (arg0: any) => void }) {
             value: filters.path,
             onChange: (_: BaseSyntheticEvent, newValues: Path[]) =>
                 dispatch(setPath(newValues)),
-            buttons: createButtons<Path>(paths, "paths"),
+            buttons: createButtons(paths, "paths"),
         },
         {
             name: "Rarity",
@@ -73,8 +69,8 @@ function WeaponFilters({ handleClose }: { handleClose: (arg0: any) => void }) {
             value: filters.calyxMat,
             onChange: (_: BaseSyntheticEvent, newValues: CalyxMaterial[]) =>
                 dispatch(setCalyxMat(newValues)),
-            buttons: createButtons<CalyxMaterial>(
-                filteredCalyxMaterials(showUnrelased),
+            buttons: createButtons(
+                getMaterialKeyNames([...calyxMaterials], showUnrelased),
                 "materials/calyx"
             ),
         },
@@ -83,8 +79,8 @@ function WeaponFilters({ handleClose }: { handleClose: (arg0: any) => void }) {
             value: filters.commonMat,
             onChange: (_: BaseSyntheticEvent, newValues: CommonMaterial[]) =>
                 dispatch(setCommonMat(newValues)),
-            buttons: createButtons<CommonMaterial>(
-                filteredCommonMaterials(showUnrelased),
+            buttons: createButtons(
+                getMaterialKeyNames([...commonMaterials], showUnrelased),
                 "materials/common"
             ),
         },
@@ -146,7 +142,7 @@ function WeaponFilters({ handleClose }: { handleClose: (arg0: any) => void }) {
 
 export default WeaponFilters;
 
-function createButtons<T>(items: readonly T[], url: string) {
+function createButtons<T extends string>(items: readonly T[], url: string) {
     // const padding = url.startsWith("materials/") ? "0px" : "4px";
     return items.map((item) => ({
         value: item,
@@ -165,12 +161,12 @@ function createButtons<T>(items: readonly T[], url: string) {
     }));
 }
 
-function getTooltip<T>(item: T, url: string) {
+function getTooltip<T extends string>(item: T, url: string) {
     let tooltip;
     if (url.startsWith("materials/common")) {
-        tooltip = formatCommonMaterials(item as CommonMaterialKeys);
+        tooltip = formatMaterialName(getCommonMaterial({ tag: item }));
     } else if (url.startsWith("materials/calyx")) {
-        tooltip = formatCalyxMaterials(item as CalyxMaterialKeys);
+        tooltip = formatMaterialName(getCalyxMaterial({ tag: item }));
     } else {
         tooltip = `${item}`;
     }

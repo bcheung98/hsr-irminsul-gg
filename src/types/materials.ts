@@ -1,24 +1,42 @@
-import { NestedKeyOf } from "./_common";
+import { Rarity } from "./_common";
 import {
-    characterXPMaterials,
-    weaponXPMaterials,
+    characterXPMatNames,
+    weaponXPMatNames,
 } from "data/materials/xpMaterials";
-import { calyxMaterials } from "data/materials/calyxMaterials";
-import { commonMaterials } from "data/materials/commonMaterials";
-import { bossMaterials } from "data/materials/bossMaterials";
-import { weeklyBossMaterials } from "data/materials/weeklyBossMaterials";
+import { calyxMatNames } from "data/materials/calyxMaterials";
+import { commonMatNames } from "data/materials/commonMaterials";
+import { bossMatNames } from "data/materials/bossMaterials";
+import { weeklyBossMatNames } from "data/materials/weeklyBossMaterials";
+import { Version } from "./version";
 
-export type CharacterXPMaterial = keyof typeof characterXPMaterials;
-export type WeaponXPMaterial = keyof typeof weaponXPMaterials;
+export type MaterialCategory =
+    | "credits"
+    | "characterXP"
+    | "weaponXP"
+    | "bossMat"
+    | "weeklyBossMat"
+    | "tracksOfDestiny"
+    | "calyxMat"
+    | "commonMat";
 
-export type CalyxMaterialKeys = keyof typeof calyxMaterials;
-export type CalyxMaterial = NestedKeyOf<typeof calyxMaterials>;
+export interface Material {
+    id: string;
+    category: MaterialCategory;
+    tag: string;
+    name: string;
+    displayName: string;
+    source?: string;
+    rarity?: Rarity;
+    release: Version;
+}
 
-export type CommonMaterialKeys = keyof typeof commonMaterials;
-export type CommonMaterial = NestedKeyOf<typeof commonMaterials>;
+export type CharacterXPMaterial = (typeof characterXPMatNames)[number];
+export type WeaponXPMaterial = (typeof weaponXPMatNames)[number];
 
-export type BossMaterial = keyof typeof bossMaterials;
-export type WeeklyBossMaterial = keyof typeof weeklyBossMaterials;
+export type CalyxMaterial = (typeof calyxMatNames)[number];
+export type CommonMaterial = (typeof commonMatNames)[number];
+export type BossMaterial = (typeof bossMatNames)[number];
+export type WeeklyBossMaterial = (typeof weeklyBossMatNames)[number];
 
 export interface Materials {
     calyxMat?: CalyxMaterial;
