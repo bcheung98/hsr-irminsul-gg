@@ -1,103 +1,248 @@
-import { objectKeys } from "helpers/utils";
-import { BossMaterial } from "types/materials";
-
-export const bossMaterials = <const>{
-    "Broken Teeth of Iron Wolf": {
+export const bossMaterials = [
+    {
+        id: "bossMat_0",
+        category: "bossMat",
+        tag: "Broken Teeth of Iron Wolf",
+        name: "Broken Teeth of Iron Wolf",
         displayName: "Broken Teeth of Iron Wolf",
         source: "",
+        rarity: 4,
+        release: { version: "1.0" },
     },
-    "Endotherm Chitin": {
+    {
+        id: "bossMat_1",
+        category: "bossMat",
+        tag: "Endotherm Chitin",
+        name: "Endotherm Chitin",
         displayName: "Endotherm Chitin",
         source: "",
+        rarity: 4,
+        release: { version: "1.0" },
     },
-    "Enigmatic Ectostella": {
+    {
+        id: "bossMat_2",
+        category: "bossMat",
+        tag: "Enigmatic Ectostella",
+        name: "Enigmatic Ectostella",
         displayName: "Enigmatic Ectostella",
         source: "",
+        rarity: 4,
+        release: { version: "1.0" },
     },
-    "Gelid Chitin": {
+    {
+        id: "bossMat_3",
+        category: "bossMat",
+        tag: "Gelid Chitin",
+        name: "Gelid Chitin",
         displayName: "Gelid Chitin",
         source: "",
+        rarity: 4,
+        release: { version: "1.0" },
     },
-    "Golden Crown of the Past Shadow": {
+    {
+        id: "bossMat_4",
+        category: "bossMat",
+        tag: "Golden Crown of the Past Shadow",
+        name: "Golden Crown of the Past Shadow",
         displayName: "Golden Crown of the Past Shadow",
         source: "",
+        rarity: 4,
+        release: { version: "1.0" },
     },
-    "Horn of Snow": {
+    {
+        id: "bossMat_5",
+        category: "bossMat",
+        tag: "Horn of Snow",
+        name: "Horn of Snow",
         displayName: "Horn of Snow",
         source: "",
+        rarity: 4,
+        release: { version: "1.0" },
     },
-    "Lightning Crown of the Past Shadow": {
+    {
+        id: "bossMat_6",
+        category: "bossMat",
+        tag: "Lightning Crown of the Past Shadow",
+        name: "Lightning Crown of the Past Shadow",
         displayName: "Lightning Crown of the Past Shadow",
         source: "",
+        rarity: 4,
+        release: { version: "1.0" },
     },
-    "Shape Shifter's Lightning Staff": {
+    {
+        id: "bossMat_7",
+        category: "bossMat",
+        tag: "Shape Shifter's Lightning Staff",
+        name: "Shape Shifter's Lightning Staff",
         displayName: "Shape Shifter's Lightning Staff",
         source: "",
+        rarity: 4,
+        release: { version: "1.0" },
     },
-    "Storm Eye": {
+    {
+        id: "bossMat_8",
+        category: "bossMat",
+        tag: "Storm Eye",
+        name: "Storm Eye",
         displayName: "Storm Eye",
         source: "",
+        rarity: 4,
+        release: { version: "1.0" },
     },
-    "Void Cast Iron": {
+    {
+        id: "bossMat_9",
+        category: "bossMat",
+        tag: "Void Cast Iron",
+        name: "Void Cast Iron",
         displayName: "Void Cast Iron",
         source: "",
+        rarity: 4,
+        release: { version: "1.0" },
     },
-    "Ascendant Debris": {
+    {
+        id: "bossMat_10",
+        category: "bossMat",
+        tag: "Ascendant Debris",
+        name: "Ascendant Debris",
         displayName: "Ascendant Debris",
         source: "",
+        rarity: 4,
+        release: { version: "1.2" },
     },
-    "Nail of the Ape": {
+    {
+        id: "bossMat_11",
+        category: "bossMat",
+        tag: "Nail of the Ape",
+        name: "Nail of the Ape",
         displayName: "Nail of the Ape",
         source: "",
+        rarity: 4,
+        release: { version: "1.3" },
     },
-    "Suppressing Edict": {
+    {
+        id: "bossMat_12",
+        category: "bossMat",
+        tag: "Suppressing Edict",
+        name: "Suppressing Edict",
         displayName: "Suppressing Edict",
         source: "",
+        rarity: 4,
+        release: { version: "1.3" },
     },
-    "Searing Steel Blade": {
+    {
+        id: "bossMat_13",
+        category: "bossMat",
+        tag: "Searing Steel Blade",
+        name: "Searing Steel Blade",
         displayName: "Searing Steel Blade",
         source: "",
+        rarity: 4,
+        release: { version: "1.4" },
     },
-    "Netherworld Pass": { displayName: "Netherworld Pass", source: "" },
-    "Dream Fridge": { displayName: "Dream Fridge", source: "" },
-    "Dream Flamer": { displayName: "Dream Flamer", source: "" },
-    "Raging Heart": { displayName: "Raging Heart", source: "" },
-    "IPC Work Permit": { displayName: "IPC Work Permit", source: "" },
-    "A Glass of the Besotted Era": {
+    {
+        id: "bossMat_14",
+        category: "bossMat",
+        tag: "Netherworld Pass",
+        name: "Netherworld Pass",
+        displayName: "Netherworld Pass",
+        source: "",
+        rarity: 4,
+        release: { version: "1.5" },
+    },
+    {
+        id: "bossMat_15",
+        category: "bossMat",
+        tag: "Dream Fridge",
+        name: "Dream Fridge",
+        displayName: "Dream Fridge",
+        source: "",
+        rarity: 4,
+        release: { version: "2.0" },
+    },
+    {
+        id: "bossMat_16",
+        category: "bossMat",
+        tag: "Dream Flamer",
+        name: "Dream Flamer",
+        displayName: "Dream Flamer",
+        source: "",
+        rarity: 4,
+        release: { version: "2.0" },
+    },
+    {
+        id: "bossMat_17",
+        category: "bossMat",
+        tag: "Raging Heart",
+        name: "Raging Heart",
+        displayName: "Raging Heart",
+        source: "",
+        rarity: 4,
+        release: { version: "2.1" },
+    },
+    {
+        id: "bossMat_18",
+        category: "bossMat",
+        tag: "IPC Work Permit",
+        name: "IPC Work Permit",
+        displayName: "IPC Work Permit",
+        source: "",
+        rarity: 4,
+        release: { version: "2.2" },
+    },
+    {
+        id: "bossMat_19",
+        category: "bossMat",
+        tag: "A Glass of the Besotted Era",
+        name: "A Glass of the Besotted Era",
         displayName: "A Glass of the Besotted Era",
         source: "",
+        rarity: 4,
+        release: { version: "2.5" },
     },
-    "Nail of the Beast Coffin": {
+    {
+        id: "bossMat_20",
+        category: "bossMat",
+        tag: "Nail of the Beast Coffin",
+        name: "Nail of the Beast Coffin",
         displayName: "Nail of the Beast Coffin",
         source: "",
+        rarity: 4,
+        release: { version: "2.5" },
     },
-    "Chordal Mirage": { displayName: "Chordal Mirage", source: "" },
-    "Darkveil Moonlight": {
-        unreleased: true,
+    {
+        id: "bossMat_21",
+        category: "bossMat",
+        tag: "Chordal Mirage",
+        name: "Chordal Mirage",
+        displayName: "Chordal Mirage",
+        source: "",
+        rarity: 4,
+        release: { version: "2.6" },
+    },
+    {
+        id: "bossMat_22",
+        category: "bossMat",
+        tag: "Darkveil Moonlight",
+        name: "Darkveil Moonlight",
         displayName: "Darkveil Moonlight",
         source: "",
+        rarity: 4,
+        release: { version: "3.1" },
     },
-    "Harbinger of Strife": {
-        unreleased: true,
+    {
+        id: "bossMat_23",
+        category: "bossMat",
+        tag: "Harbinger of Strife",
+        name: "Harbinger of Strife",
         displayName: "Harbinger of Strife",
         source: "",
+        rarity: 4,
+        release: { version: "3.1" },
     },
-};
+] as const;
 
-export const bossMatNames = objectKeys(bossMaterials);
+export const bossMatNames = bossMaterials.map((mat) => mat.tag);
 
-export const filteredBossMaterials = (showUnreleased = false) => {
-    if (showUnreleased) {
-        return bossMatNames;
-    } else {
-        return bossMatNames.filter(
-            (material) =>
-                !Object.keys(bossMaterials[material]).includes("unreleased")
-        );
-    }
-};
-
-export const formatBossMaterials = (material: BossMaterial) => {
-    const mat = bossMaterials[material] || { displayName: "", source: "?" };
-    return `${mat.displayName} (${mat.source})`;
-};
+export function getBossMaterial({ id, tag }: { id?: string; tag: string }) {
+    return bossMaterials.find((mat) => mat.id === id || mat.tag === tag);
+}

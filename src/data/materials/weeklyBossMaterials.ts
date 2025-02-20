@@ -1,52 +1,74 @@
-import { objectKeys } from "helpers/utils";
-import { WeeklyBossMaterial } from "types/materials";
-
-export const weeklyBossMaterials = <const>{
-    "Destroyer's Final Road": {
+export const weeklyBossMaterials = [
+    {
+        id: "weeklyBossMat_0",
+        category: "weeklyBossMat",
+        tag: "Destroyer's Final Road",
+        name: "Destroyer's Final Road",
         displayName: "Destroyer's Final Road",
         source: "Doomsday Beast",
+        rarity: 4,
+        release: { version: "1.0" },
     },
-    "Guardian's Lament": {
+    {
+        id: "weeklyBossMat_1",
+        category: "weeklyBossMat",
+        tag: "Guardian's Lament",
+        name: "Guardian's Lament",
         displayName: "Guardian's Lament",
         source: "Cocolia",
+        rarity: 4,
+        release: { version: "1.0" },
     },
-    "Regret of Infinite Ochema": {
+    {
+        id: "weeklyBossMat_2",
+        category: "weeklyBossMat",
+        tag: "Regret of Infinite Ochema",
+        name: "Regret of Infinite Ochema",
         displayName: "Regret of Infinite Ochema",
         source: "Phantylia",
+        rarity: 4,
+        release: { version: "1.2" },
     },
-    "Past Evils of the Borehole Planet Disaster": {
+    {
+        id: "weeklyBossMat_3",
+        category: "weeklyBossMat",
+        tag: "Past Evils of the Borehole Planet Disaster",
+        name: "Past Evils of the Borehole Planet Disaster",
         displayName: "Past Evils of the Borehole Planet Disaster",
         source: "Starcrusher Swarm King",
+        rarity: 4,
+        release: { version: "1.6" },
     },
-    "Lost Echo of the Shared Wish": {
+    {
+        id: "weeklyBossMat_4",
+        category: "weeklyBossMat",
+        tag: "Lost Echo of the Shared Wish",
+        name: "Lost Echo of the Shared Wish",
         displayName: "Lost Echo of the Shared Wish",
         source: "The Great Septimus",
+        rarity: 4,
+        release: { version: "2.2" },
     },
-    "Auspice Sliver": {
+    {
+        id: "weeklyBossMat_5",
+        category: "weeklyBossMat",
+        tag: "Auspice Sliver",
+        name: "Auspice Sliver",
         displayName: "Auspice Sliver",
         source: 'Shadow of "Feixiao"',
+        rarity: 4,
+        release: { version: "2.5" },
     },
-};
+] as const;
 
-export const weeklyBossMatNames = objectKeys(weeklyBossMaterials);
+export const weeklyBossMatNames = weeklyBossMaterials.map((mat) => mat.tag);
 
-export const filteredWeeklyBossMaterials = (showUnreleased = false) => {
-    if (showUnreleased) {
-        return weeklyBossMatNames;
-    } else {
-        return weeklyBossMatNames.filter(
-            (material) =>
-                !Object.keys(weeklyBossMaterials[material]).includes(
-                    "unreleased"
-                )
-        );
-    }
-};
-
-export const formatWeeklyBossMaterials = (material: WeeklyBossMaterial) => {
-    const mat = weeklyBossMaterials[material] || {
-        displayName: "",
-        source: "?",
-    };
-    return `${mat.displayName} (${mat.source})`;
-};
+export function getWeeklyBossMaterial({
+    id,
+    tag,
+}: {
+    id?: string;
+    tag: string;
+}) {
+    return weeklyBossMaterials.find((mat) => mat.id === id || mat.tag === tag);
+}

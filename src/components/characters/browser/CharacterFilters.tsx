@@ -28,18 +28,19 @@ import {
     setWorld,
 } from "reducers/characterFilters";
 import { elements, paths, rarities, worlds } from "data/common";
+import { formatMaterialName, getMaterialKeyNames } from "helpers/materials";
 import {
-    filteredCalyxMaterials,
-    formatCalyxMaterials,
+    calyxMaterials,
+    getCalyxMaterial,
 } from "data/materials/calyxMaterials";
 import {
-    filteredCommonMaterials,
-    formatCommonMaterials,
+    commonMaterials,
+    getCommonMaterial,
 } from "data/materials/commonMaterials";
-import { filteredBossMaterials } from "data/materials/bossMaterials";
+import { bossMaterials } from "data/materials/bossMaterials";
 import {
-    filteredWeeklyBossMaterials,
-    formatWeeklyBossMaterials,
+    weeklyBossMaterials,
+    getWeeklyBossMaterial,
 } from "data/materials/weeklyBossMaterials";
 
 // Type imports
@@ -47,9 +48,7 @@ import { Element, Path, Rarity, World } from "types/_common";
 import {
     BossMaterial,
     CalyxMaterial,
-    CalyxMaterialKeys,
     CommonMaterial,
-    CommonMaterialKeys,
     WeeklyBossMaterial,
 } from "types/materials";
 
@@ -63,7 +62,7 @@ function CharacterFilters({
     const filters = useAppSelector(selectCharacterFilters);
     const dispatch = useAppDispatch();
 
-    const showUnrelased = useAppSelector(selectUnreleasedContent);
+    const showUnreleased = useAppSelector(selectUnreleasedContent);
 
     const filterGroups = [
         {
@@ -71,14 +70,14 @@ function CharacterFilters({
             value: filters.element,
             onChange: (_: BaseSyntheticEvent, newValues: Element[]) =>
                 dispatch(setElement(newValues)),
-            buttons: createButtons<Element>(elements, "elements"),
+            buttons: createButtons(elements, "elements"),
         },
         {
             name: "Path",
             value: filters.path,
             onChange: (_: BaseSyntheticEvent, newValues: Path[]) =>
                 dispatch(setPath(newValues)),
-            buttons: createButtons<Path>(paths, "paths"),
+            buttons: createButtons(paths, "paths"),
         },
         {
             name: "Rarity",
@@ -95,8 +94,8 @@ function CharacterFilters({
             value: filters.calyxMat,
             onChange: (_: BaseSyntheticEvent, newValues: CalyxMaterial[]) =>
                 dispatch(setCalyxMat(newValues)),
-            buttons: createButtons<CalyxMaterial>(
-                filteredCalyxMaterials(showUnrelased),
+            buttons: createButtons(
+                getMaterialKeyNames([...calyxMaterials], showUnreleased),
                 "materials/calyx"
             ),
         },
@@ -105,8 +104,8 @@ function CharacterFilters({
             value: filters.commonMat,
             onChange: (_: BaseSyntheticEvent, newValues: CommonMaterial[]) =>
                 dispatch(setCommonMat(newValues)),
-            buttons: createButtons<CommonMaterial>(
-                filteredCommonMaterials(showUnrelased),
+            buttons: createButtons(
+                getMaterialKeyNames([...commonMaterials], showUnreleased),
                 "materials/common"
             ),
         },
@@ -115,8 +114,8 @@ function CharacterFilters({
             value: filters.bossMat,
             onChange: (_: BaseSyntheticEvent, newValues: BossMaterial[]) =>
                 dispatch(setBossMat(newValues)),
-            buttons: createButtons<BossMaterial>(
-                filteredBossMaterials(showUnrelased),
+            buttons: createButtons(
+                getMaterialKeyNames([...bossMaterials], showUnreleased),
                 "materials/boss"
             ),
         },
@@ -127,8 +126,8 @@ function CharacterFilters({
                 _: BaseSyntheticEvent,
                 newValues: WeeklyBossMaterial[]
             ) => dispatch(setWeeklyBossMat(newValues)),
-            buttons: createButtons<WeeklyBossMaterial>(
-                filteredWeeklyBossMaterials(showUnrelased),
+            buttons: createButtons(
+                getMaterialKeyNames([...weeklyBossMaterials], showUnreleased),
                 "materials/weekly"
             ),
         },
@@ -197,7 +196,7 @@ function CharacterFilters({
 
 export default CharacterFilters;
 
-function createButtons<T>(items: readonly T[], url: string) {
+function createButtons<T extends string>(items: readonly T[], url: string) {
     //  const padding = url.startsWith("materials/") ? "0px" : "4px";
     return items.map((item) => ({
         value: item,
@@ -216,14 +215,14 @@ function createButtons<T>(items: readonly T[], url: string) {
     }));
 }
 
-function getTooltip<T>(item: T, url: string) {
+function getTooltip<T extends string>(item: T, url: string) {
     let tooltip;
     if (url.startsWith("materials/common")) {
-        tooltip = formatCommonMaterials(item as CommonMaterialKeys);
+        tooltip = formatMaterialName(getCommonMaterial({ tag: item }));
     } else if (url.startsWith("materials/calyx")) {
-        tooltip = formatCalyxMaterials(item as CalyxMaterialKeys);
+        tooltip = formatMaterialName(getCalyxMaterial({ tag: item }));
     } else if (url.startsWith("materials/weekly")) {
-        tooltip = `${formatWeeklyBossMaterials(item as WeeklyBossMaterial)}`;
+        tooltip = formatMaterialName(getWeeklyBossMaterial({ tag: item }));
     } else {
         tooltip = `${item}`;
     }

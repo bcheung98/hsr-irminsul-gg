@@ -1,19 +1,20 @@
 import { objectKeys } from "./utils";
-import { materialRarity } from "./materialRarity";
+import { formatMaterialName } from "./materials";
 import {
-    characterXPMaterials,
-    weaponXPMaterials,
+    getCharacterXPMaterial,
+    getWeaponXPMaterial,
 } from "data/materials/xpMaterials";
-import { formatWeeklyBossMaterials } from "data/materials/weeklyBossMaterials";
-import { calyxMaterials } from "data/materials/calyxMaterials";
-import { commonMaterials } from "data/materials/commonMaterials";
+import { getBossMaterial } from "data/materials/bossMaterials";
+import { getWeeklyBossMaterial } from "data/materials/weeklyBossMaterials";
+import { getCalyxMaterial } from "data/materials/calyxMaterials";
+import { getCommonMaterial } from "data/materials/commonMaterials";
 import { Rarity } from "types/_common";
 import {
     CharacterCost,
     TotalCostObject,
     TotalCostObjectKeys,
 } from "types/costs";
-import { WeeklyBossMaterial } from "types/materials";
+import { Material } from "types/materials";
 
 export interface MaterialCostData {
     name: string;
@@ -26,11 +27,9 @@ export function createMaterialCostData(costs: TotalCostObject) {
     const materials: MaterialCostData[] = [];
     const costArray: number[] = [];
     objectKeys(costs).forEach((material) => {
-        const [minRarity, maxRarity] = materialRarity[material];
-        let rarity = minRarity;
         objectKeys(costs[material]).forEach((mat) => {
             costArray.push(costs[material][mat]);
-            let { name, img } = getMaterialData(material, mat);
+            const { name, rarity, img } = getMaterialData(material, mat);
             costs[material][mat] &&
                 materials.push({
                     name: name,
@@ -38,10 +37,6 @@ export function createMaterialCostData(costs: TotalCostObject) {
                     cost: costs[material][mat],
                     img: img,
                 });
-            rarity += 1;
-            if (rarity > maxRarity) {
-                rarity = minRarity;
-            }
         });
     });
     return materials;
@@ -51,55 +46,57 @@ function getMaterialData(
     key: TotalCostObjectKeys,
     material = ""
 ): { name: string; rarity?: Rarity; img: string } {
+    let mat: Material | undefined;
     switch (key) {
         case "credits":
-            return { name: "Credits", img: "Credit" };
+            return { name: "Credits", rarity: 3, img: "Credit" };
         case "characterXP":
+            mat = getCharacterXPMaterial({ tag: material, id: material })!;
             return {
-                name: characterXPMaterials[
-                    `${material}` as keyof typeof characterXPMaterials
-                ],
-                img: `xp/${material}`,
+                name: mat.displayName,
+                rarity: mat.rarity,
+                img: `xp/${mat.tag}`,
             };
         case "weaponXP":
+            mat = getWeaponXPMaterial({ tag: material, id: material })!;
             return {
-                name: weaponXPMaterials[
-                    `${material}` as keyof typeof weaponXPMaterials
-                ],
-                img: `xp/${material}`,
+                name: mat.displayName,
+                rarity: mat.rarity,
+                img: `xp/${mat.tag}`,
             };
         case "bossMat":
+            mat = getBossMaterial({ tag: material, id: material })!;
             return {
-                name: material,
-                img: `boss/${material}`,
+                name: mat.displayName,
+                rarity: mat.rarity,
+                img: `boss/${mat.tag}`,
             };
         case "weeklyBossMat":
+            mat = getWeeklyBossMaterial({ tag: material, id: material })!;
             return {
-                name: formatWeeklyBossMaterials(material as WeeklyBossMaterial),
-                img: `weekly/${material}`,
+                name: formatMaterialName(mat),
+                rarity: mat.rarity,
+                img: `weekly/${mat.tag}`,
             };
         case "tracksOfDestiny":
             return {
                 name: "Tracks of Destiny",
+                rarity: 5,
                 img: "Tracks of Destiny",
             };
         case "calyxMat":
-            let calyxMats =
-                calyxMaterials[
-                    material.slice(0, -1) as keyof typeof calyxMaterials
-                ];
+            mat = getCalyxMaterial({ tag: material, id: material })!;
             return {
-                name: calyxMats[material as keyof typeof calyxMats],
-                img: `calyx/${material}`,
+                name: formatMaterialName(mat),
+                rarity: mat.rarity,
+                img: `calyx/${mat.tag}`,
             };
         case "commonMat":
-            let commonMats =
-                commonMaterials[
-                    material.slice(0, -1) as keyof typeof commonMaterials
-                ];
+            mat = getCommonMaterial({ tag: material, id: material })!;
             return {
-                name: commonMats[material as keyof typeof commonMats],
-                img: `common/${material}`,
+                name: formatMaterialName(mat),
+                rarity: mat.rarity,
+                img: `common/${mat.tag}`,
             };
     }
 }
