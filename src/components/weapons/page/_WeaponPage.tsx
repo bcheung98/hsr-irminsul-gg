@@ -49,15 +49,13 @@ function WeaponPage() {
                         <Stack spacing={2}>
                             <BetaTag version={weapon.release.version} />
                             <WeaponInfo weapon={weapon} />
+                            <WeaponPassive weapon={weapon} />
                         </Stack>
                     </Grid>
                 </Grid>
                 <Grid container columnSpacing={3} rowSpacing={2}>
                     <Grid size={{ xs: 12, md: 7 }}>
-                        <Stack spacing={2}>
-                            <WeaponPassive weapon={weapon} />
-                            <WeaponAscension weapon={weapon} />
-                        </Stack>
+                        <WeaponAscension weapon={weapon} />
                     </Grid>
                     <Grid size={{ xs: 12, md: 5 }}>
                         <WeaponStats weapon={weapon} />
