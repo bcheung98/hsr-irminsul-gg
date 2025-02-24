@@ -71,12 +71,12 @@ export const skillKeywords: SkillKeywords = {
         description: "Fixed chance will not be affected by any factor.",
     },
     "follow up attack": {
-        name: "Follow-Up Attack",
+        name: "Follow-up ATK",
         description:
             "Unleashes an extra attack on the target. This effect is triggered automatically when requirements are met.",
     },
     "joint attack": {
-        name: "Joint Attack",
+        name: "Joint ATK",
         description:
             "Multiple targets respectively use attacks on enemy targets in one action.",
     },
