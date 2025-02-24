@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Xarrow from "react-xarrows";
 
 // Component imports
@@ -40,7 +41,7 @@ function CharacterTraceNode({
     const theme = useTheme();
     const matches_sm_dn = useMediaQuery(theme.breakpoints.down("sm"));
 
-    const { name, element } = character;
+    const { name, element, path } = character;
     const selected = id === selectedID;
     const elementColor = getElementColor({ element });
 
@@ -74,6 +75,14 @@ function CharacterTraceNode({
         unlock: unlock,
         stat: stat,
     };
+
+    useEffect(() => {
+        if (path === "Preservation" && id === "A-2-0") {
+            setTrace(traceNodeData);
+        } else if (path !== "Preservation" && id === "A-1") {
+            setTrace(traceNodeData);
+        }
+    }, []);
 
     return (
         <Stack direction="row" alignItems="center" spacing={4}>
