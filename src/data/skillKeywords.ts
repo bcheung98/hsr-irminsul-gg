@@ -95,6 +95,11 @@ export const skillKeywords: SkillKeywords = {
         description:
             "Super Break DMG increases with higher Break Effect, higher Toughness Reduction of the attack, and higher character levels.<br />Super Break DMG cannot CRIT hit and is not affected by DMG Boost effects.",
     },
+    territory: {
+        name: "Territory",
+        description:
+            "Territory effects are unique in the battle. While it exists, other abilities with Territory effects cannot be used.",
+    },
     "true dmg": {
         name: "True DMG",
         description:
