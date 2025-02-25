@@ -16,6 +16,11 @@ export const skillKeywords: SkillKeywords = {
         description:
             "Causes the target being hit to take extra DMG, which is not considered an attack.",
     },
+    backup: {
+        name: "Backup",
+        description:
+            "Enemies cannot actively target backup units. Allies' Blast-type abilities cannot Blast to backup units.",
+    },
     "base chance": {
         name: "Base Chance",
         description:
