@@ -64,6 +64,7 @@ export interface CharacterSkill extends SkillWithScaling {
     };
     regen?: number;
     break?: Record<"Single Target" | "Blast" | "AoE", number>;
+    showIcon?: boolean;
 }
 export type CharacterTalent = Omit<CharacterSkill, "cost">;
 export type CharacterTechnique = Omit<CharacterSkill, "cost" | "scaling">;

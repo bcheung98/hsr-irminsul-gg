@@ -89,13 +89,15 @@ function CharacterSkillTab({
                                 alignItems="center"
                                 sx={{ height: "64px", mb: "8px" }}
                             >
-                                <Image
-                                    src={`characters/skills/${name.toLowerCase()}_${skillKey}${
-                                        index > 0 ? index : ""
-                                    }`}
-                                    alt={skill.name}
-                                    style={theme.styles.skillIcon(element)}
-                                />
+                                {skill.showIcon !== false && (
+                                    <Image
+                                        src={`characters/skills/${name.toLowerCase()}_${skillKey}${
+                                            index > 0 ? index : ""
+                                        }`}
+                                        alt={skill.name}
+                                        style={theme.styles.skillIcon(element)}
+                                    />
+                                )}
                                 <Box>
                                     <TextStyled variant="h6-styled">
                                         {skill.name}
