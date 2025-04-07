@@ -1,5 +1,6 @@
 // MAKE SURE TO CHANGE THIS EVERY UPDATE!
 export const updates = [
+    { version: "3.2", name: "Through the Petals in the Land of Repose" },
     { version: "3.1", name: "Light Slips the Gate, Shadow Greets the Throne" },
     { version: "3.0", name: "Paean of Era Nova" },
     { version: "2.7", name: "A New Venture on the Eighth Dawn" },
