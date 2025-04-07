@@ -154,7 +154,7 @@ function CharacterSkillAdvancedStats({
 
 export default CharacterSkillAdvancedStats;
 
-function getSkillCost(type: string, cost: number, matches: boolean) {
+function getSkillCost(type: string, cost: number | string, matches: boolean) {
     const theme = useTheme();
 
     const costType = type === "SP" || type === "Energy" ? `${type}` : "Ability";
@@ -181,7 +181,9 @@ function getSkillCost(type: string, cost: number, matches: boolean) {
             <>
                 <span style={{ color: theme.text.header }}>{cost}</span>
                 <span style={{ color: theme.text.highlight2 }}>
-                    {` points of ${type}`}
+                    {typeof cost === "string"
+                        ? ` of ${type}`
+                        : ` points of ${type}`}
                 </span>
             </>
         );

@@ -59,7 +59,7 @@ export type CharacterSkillTag =
 export interface CharacterSkill extends SkillWithScaling {
     tag?: CharacterSkillTag;
     cost: {
-        value: number;
+        value: number | string;
         type: string;
     };
     regen?: number;
