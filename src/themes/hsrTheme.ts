@@ -31,6 +31,10 @@ export const hsrThemeData = {
     name: "HSR",
     background: (index: number, shade?: Shade) =>
         getThemeBackgroundColors({ colors: backgroundColors, index, shade }),
+    backgroundImageColors: ["rgb(2, 16, 48)", "rgba(101, 135, 141, 0.2)"],
+    backgroundImageURL:
+        "https://assets.irminsul.gg/hsr/images/HSR_Background.png",
+    backgroundImageAlpha: 0.5,
     palette: {
         primary: {
             main: "rgb(15, 15, 15)",
