@@ -36,6 +36,10 @@ export const skillKeywords: SkillKeywords = {
         description:
             "Can buff combat ability for a period of time, which can be dispelled unless otherwise specified.",
     },
+    "continuous effect": {
+        name: "Continuous Effect",
+        description: "Includes buffs, debuffs, and other effects.",
+    },
     counter: {
         name: "Counter",
         description:
