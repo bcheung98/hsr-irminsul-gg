@@ -239,6 +239,16 @@ export const bossMaterials = [
         rarity: 4,
         release: { version: "3.1" },
     },
+    {
+        id: "bossMat_23",
+        category: "bossMat",
+        tag: "Invasive Clot",
+        name: "Invasive Clot",
+        displayName: "Invasive Clot",
+        source: "",
+        rarity: 4,
+        release: { version: "3.3" },
+    },
 ] as const;
 
 export const bossMatNames = bossMaterials.map((mat) => mat.tag);
