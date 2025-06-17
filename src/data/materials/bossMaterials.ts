@@ -240,7 +240,7 @@ export const bossMaterials = [
         release: { version: "3.1" },
     },
     {
-        id: "bossMat_23",
+        id: "bossMat_24",
         category: "bossMat",
         tag: "Invasive Clot",
         name: "Invasive Clot",
