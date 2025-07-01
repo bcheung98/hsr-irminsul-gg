@@ -1,3 +1,5 @@
+import parse from "html-react-parser";
+
 // Component imports
 import RarityStars from "custom/RarityStars";
 import Image from "custom/Image";
@@ -62,7 +64,7 @@ function CharacterInfoMain({ character }: CharacterProps) {
                     variant="subtitle1-styled"
                     sx={{ fontStyle: "italic" }}
                 >
-                    {description}
+                    {parse(description)}
                 </TextStyled>
             </Stack>
         </Card>

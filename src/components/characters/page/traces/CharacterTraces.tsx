@@ -5,6 +5,7 @@ import CharacterTraceNode from "./CharacterTraceNode";
 import CharacterTraceInfo from "./CharacterTraceInfo";
 import CharacterTraceTotalStat from "./CharacterTraceTotalStat";
 import MainContentBox from "custom/MainContentBox";
+import { NovaflareButtons } from "../CharacterNovaflare";
 
 // MUI imports
 import { Stack, Divider } from "@mui/material";
@@ -13,7 +14,7 @@ import Grid from "@mui/material/Grid2";
 // Type imports
 import { CharacterProps, CharacterTraceNodeData } from "types/character";
 
-function CharacterTraces({ character }: CharacterProps) {
+function CharacterTraces({ character, novaflare }: CharacterProps) {
     const [currentTrace, setCurrentTrace] =
         useState<CharacterTraceNodeData | null>(null);
 
@@ -26,7 +27,16 @@ function CharacterTraces({ character }: CharacterProps) {
     };
 
     return (
-        <MainContentBox title="Traces">
+        <MainContentBox
+            title="Traces"
+            actions={
+                <NovaflareButtons
+                    hasNovaflare={novaflare?.hasNovaflare!}
+                    value={novaflare?.value!}
+                    onChange={novaflare?.onChange!}
+                />
+            }
+        >
             <Stack spacing={2} divider={<Divider />}>
                 <Grid
                     container

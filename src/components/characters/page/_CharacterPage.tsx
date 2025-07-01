@@ -1,3 +1,4 @@
+import { BaseSyntheticEvent, useState } from "react";
 import { useParams } from "react-router";
 
 // Component imports
@@ -19,7 +20,11 @@ import Grid from "@mui/material/Grid2";
 
 // Helper imports
 import { useAppSelector } from "helpers/hooks";
-import { selectCharacters } from "reducers/character";
+import { selectCharacters, selectCharactersV2 } from "reducers/character";
+
+// Type imports
+import { Character } from "types/character";
+import { Novaflare, NovaflareButtonsProps } from "./CharacterNovaflare";
 
 function CharacterPage() {
     const theme = useTheme();
@@ -46,13 +51,42 @@ function CharacterPage() {
             .querySelector('meta[property="og:description"]')
             ?.setAttribute("content", documentDesc);
 
+        const characterV2 = useAppSelector(selectCharactersV2).find(
+            (char) =>
+                char.name.split(" ").join("_").toLowerCase() === params.name
+        );
+
+        const [mode, setMode] = useState<Novaflare>("enhanced");
+        const [charData, setCharData] = useState<Character>(
+            characterV2 || character
+        );
+        const handleNovaflareChange = (
+            _: BaseSyntheticEvent,
+            newMode: Novaflare
+        ) => {
+            if (newMode !== null) {
+                setMode(newMode);
+                if (newMode === "enhanced" && characterV2) {
+                    setCharData(characterV2);
+                } else {
+                    setCharData(character);
+                }
+            }
+        };
+
+        const novaflare: NovaflareButtonsProps = {
+            hasNovaflare: characterV2 !== undefined,
+            value: mode,
+            onChange: handleNovaflareChange,
+        };
+
         const betaTag = <BetaTag version={character.release.version} />;
 
-        const charSplash = <CharacterImage character={character} />;
-        const infoMain = <CharacterInfoMain character={character} />;
-        const infoMisc = <CharacterInfoMisc character={character} />;
-        const ascension = <CharacterAscension character={character} />;
-        const stats = <CharacterStats character={character} />;
+        const charSplash = <CharacterImage character={charData} />;
+        const infoMain = <CharacterInfoMain character={charData} />;
+        const infoMisc = <CharacterInfoMisc character={charData} />;
+        const ascension = <CharacterAscension character={charData} />;
+        const stats = <CharacterStats character={charData} />;
 
         return (
             <Stack spacing={2}>
@@ -83,10 +117,13 @@ function CharacterPage() {
                         {infoMisc}
                     </>
                 )}
-                <CharacterSkills character={character} />
-                <CharacterMemosprite character={character} />
-                <CharacterTraces character={character} />
-                <CharacterEidolon character={character} />
+                <CharacterSkills character={charData} novaflare={novaflare} />
+                <CharacterMemosprite
+                    character={charData}
+                    novaflare={novaflare}
+                />
+                <CharacterTraces character={charData} novaflare={novaflare} />
+                <CharacterEidolon character={charData} novaflare={novaflare} />
             </Stack>
         );
     } else {

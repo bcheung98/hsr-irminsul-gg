@@ -82,7 +82,7 @@ function CharacterTraceNode({
         } else if (path !== "Preservation" && id === "A-1") {
             setTrace(traceNodeData);
         }
-    }, []);
+    }, [trace]);
 
     return (
         <Stack direction="row" alignItems="center" spacing={4}>

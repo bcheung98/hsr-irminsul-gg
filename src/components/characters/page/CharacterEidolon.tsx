@@ -5,6 +5,7 @@ import CharacterSkillKeywordPopup from "./skills/CharacterSkillKeywordPopup";
 import MainContentBox from "custom/MainContentBox";
 import Image from "custom/Image";
 import { Text, TextStyled } from "styled/StyledTypography";
+import { NovaflareButtons } from "./CharacterNovaflare";
 
 // MUI imports
 import { useTheme, Stack, Box, Dialog } from "@mui/material";
@@ -17,7 +18,7 @@ import { parseSkillDescription } from "helpers/parseSkillDescription";
 // Type imports
 import { CharacterProps } from "types/character";
 
-function CharacterEidolon({ character }: CharacterProps) {
+function CharacterEidolon({ character, novaflare }: CharacterProps) {
     const theme = useTheme();
 
     const { name, element, eidolon, keywords } = character;
@@ -34,7 +35,16 @@ function CharacterEidolon({ character }: CharacterProps) {
 
     return (
         <>
-            <MainContentBox title="Eidolons">
+            <MainContentBox
+                title="Eidolons"
+                actions={
+                    <NovaflareButtons
+                        hasNovaflare={novaflare?.hasNovaflare!}
+                        value={novaflare?.value!}
+                        onChange={novaflare?.onChange!}
+                    />
+                }
+            >
                 <Grid container spacing={3}>
                     {objectKeys(eidolon).map((key, index) => (
                         <Grid

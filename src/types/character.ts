@@ -3,9 +3,11 @@ import { Element, Path, Rarity, World } from "./_common";
 import { CharacterMaterials } from "./materials";
 import { Skill, SkillKeywords, SkillWithScaling } from "./skill";
 import { VersionWithDate } from "./version";
+import { NovaflareButtonsProps } from "components/characters/page/CharacterNovaflare";
 
 export interface CharacterProps {
     character: Character;
+    novaflare?: NovaflareButtonsProps;
 }
 
 export interface Character {

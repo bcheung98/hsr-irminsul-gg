@@ -5,6 +5,7 @@ import MemospriteSkillTab from "./MemospriteSkillTab";
 import MainContentBox from "custom/MainContentBox";
 import Image from "custom/Image";
 import { StyledTab, StyledTabs, TabPanel } from "styled/StyledTabs";
+import { NovaflareButtons } from "../CharacterNovaflare";
 
 // MUI imports
 import { useTheme, useMediaQuery } from "@mui/material";
@@ -16,7 +17,7 @@ import { getElementColor } from "helpers/elementColors";
 // Type imports
 import { CharacterMemospriteSkillKey, CharacterProps } from "types/character";
 
-function CharacterMemosprite({ character }: CharacterProps) {
+function CharacterMemosprite({ character, novaflare }: CharacterProps) {
     const theme = useTheme();
     const matches_sm_up = useMediaQuery(theme.breakpoints.up("sm"));
 
@@ -55,6 +56,13 @@ function CharacterMemosprite({ character }: CharacterProps) {
             <MainContentBox
                 title={`Memosprite "${memosprite.name}"`}
                 contentProps={{ padding: 0 }}
+                actions={
+                    <NovaflareButtons
+                        hasNovaflare={novaflare?.hasNovaflare!}
+                        value={novaflare?.value!}
+                        onChange={novaflare?.onChange!}
+                    />
+                }
             >
                 <StyledTabs
                     variant="scrollable"

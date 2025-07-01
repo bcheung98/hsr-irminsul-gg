@@ -40,7 +40,7 @@ function MemospriteSkillScaling({
                 target.innerHTML = subScaling[sliderValue - 1];
             }
         });
-    }, [sliderValue]);
+    }, [skillData, sliderValue]);
 
     return (
         <FlexBox

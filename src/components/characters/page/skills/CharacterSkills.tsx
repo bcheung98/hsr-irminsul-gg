@@ -5,6 +5,7 @@ import CharacterSkillTab from "./CharacterSkillTab";
 import MainContentBox from "custom/MainContentBox";
 import Image from "custom/Image";
 import { StyledTab, StyledTabs, TabPanel } from "styled/StyledTabs";
+import { NovaflareButtons } from "../CharacterNovaflare";
 
 // MUI imports
 import { useTheme, useMediaQuery } from "@mui/material";
@@ -16,7 +17,7 @@ import { getElementColor } from "helpers/elementColors";
 // Type imports
 import { CharacterProps } from "types/character";
 
-function CharacterSkills({ character }: CharacterProps) {
+function CharacterSkills({ character, novaflare }: CharacterProps) {
     const theme = useTheme();
     const matches_sm_up = useMediaQuery(theme.breakpoints.up("sm"));
 
@@ -48,7 +49,17 @@ function CharacterSkills({ character }: CharacterProps) {
     };
 
     return (
-        <MainContentBox title="Skills" contentProps={{ padding: 0 }}>
+        <MainContentBox
+            title="Skills"
+            contentProps={{ padding: 0 }}
+            actions={
+                <NovaflareButtons
+                    hasNovaflare={novaflare?.hasNovaflare!}
+                    value={novaflare?.value!}
+                    onChange={novaflare?.onChange!}
+                />
+            }
+        >
             <StyledTabs
                 variant="scrollable"
                 value={tabValue}

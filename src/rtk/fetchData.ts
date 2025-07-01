@@ -9,6 +9,9 @@ export type LoadingStatus = "idle" | "pending" | "success" | "error";
 // https://api.irminsul.gg/hsr/characters.json
 const charactersURL = "https://api.irminsul.gg/hsr/characters.json";
 
+// https://api.irminsul.gg/hsr/characters-v2.json
+const charactersV2URL = "https://api.irminsul.gg/hsr/characters-v2.json";
+
 // https://api.irminsul.gg/hsr/weapons.json
 const weaponsURL = "https://api.irminsul.gg/hsr/weapons.json";
 
@@ -22,6 +25,14 @@ export const fetchCharacters = createAsyncThunk(
     "GET/characters",
     async (): Promise<Character[]> => {
         const response = await fetch(charactersURL);
+        return await response.json();
+    }
+);
+
+export const fetchCharactersV2 = createAsyncThunk(
+    "GET/charactersV2",
+    async (): Promise<Character[]> => {
+        const response = await fetch(charactersV2URL);
         return await response.json();
     }
 );

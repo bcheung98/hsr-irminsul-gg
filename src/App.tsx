@@ -11,6 +11,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 // Helper imports
 import {
     fetchCharacters,
+    fetchCharactersV2,
     fetchWeapons,
     fetchRelics,
     fetchCharacterBanners,
@@ -25,6 +26,7 @@ function App() {
 
     useEffect(() => {
         dispatch(fetchCharacters());
+        dispatch(fetchCharactersV2());
         dispatch(fetchWeapons());
         dispatch(fetchRelics());
         dispatch(fetchCharacterBanners());
