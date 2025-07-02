@@ -121,7 +121,13 @@ function MemospriteSkillTab({
                     materials={materials}
                 />
             </Box>
-            <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                maxWidth="sm"
+                fullWidth
+                disableScrollLock
+            >
                 <CharacterSkillKeywordPopup
                     onClose={handleClose}
                     tag={tag}

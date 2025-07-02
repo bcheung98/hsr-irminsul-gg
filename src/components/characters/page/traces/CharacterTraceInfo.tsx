@@ -135,6 +135,7 @@ function CharacterTraceInfo({
                     onClose={handleKeywordDialogClose}
                     maxWidth="sm"
                     fullWidth
+                    disableScrollLock
                 >
                     <CharacterSkillKeywordPopup
                         onClose={handleKeywordDialogClose}
