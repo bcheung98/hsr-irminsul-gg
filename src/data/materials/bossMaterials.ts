@@ -249,6 +249,26 @@ export const bossMaterials = [
         rarity: 4,
         release: { version: "3.3" },
     },
+    {
+        id: "bossMat_25",
+        category: "bossMat",
+        tag: "Charred Bud of Twilight",
+        name: "Charred Bud of Twilight",
+        displayName: "Charred Bud of Twilight",
+        source: "",
+        rarity: 4,
+        release: { version: "3.4" },
+    },
+    {
+        id: "bossMat_26",
+        category: "bossMat",
+        tag: "Sea Siren's Torn Fin",
+        name: "Sea Siren's Torn Fin",
+        displayName: "Sea Siren's Torn Fin",
+        source: "",
+        rarity: 4,
+        release: { version: "3.5" },
+    },
 ] as const;
 
 export const bossMatNames = bossMaterials.map((mat) => mat.tag);
