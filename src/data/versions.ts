@@ -1,5 +1,6 @@
 // MAKE SURE TO CHANGE THIS EVERY UPDATE!
 export const updates = [
+    { version: "3.5", name: "Before Their Deaths" },
     { version: "3.4", name: "For the Sun is Set to Die" },
     { version: "3.3", name: "The Fall at Dawn's Rise" },
     { version: "3.2", name: "Through the Petals in the Land of Repose" },
