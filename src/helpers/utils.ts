@@ -92,3 +92,40 @@ export function pxToInt(num: string | number) {
         return Number(num.slice(0, -2));
     }
 }
+
+export function sortBy(
+    ...args:
+        | [a: string, b: string, reverse?: boolean]
+        | [a: number, b: number, reverse?: boolean]
+): number {
+    let a: string | number;
+    let b: string | number;
+    if (args[2]) {
+        a = args[0];
+        b = args[1];
+    } else {
+        a = args[1];
+        b = args[0];
+    }
+    if (typeof a === "string" && typeof b === "string") {
+        return a.localeCompare(b, undefined, { numeric: true });
+    } else if (typeof a === "number" && typeof b === "number") {
+        return a - b;
+    } else {
+        return 0;
+    }
+}
+
+export function toTitleCase(str: string) {
+    return str
+        .split("_")
+        .map((i) =>
+            i.replace(
+                /\w\S*/g,
+                (text) =>
+                    text.charAt(0).toUpperCase() +
+                    text.substring(1).toLowerCase()
+            )
+        )
+        .join("_");
+}
