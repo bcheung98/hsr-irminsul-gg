@@ -1,145 +1,205 @@
-import { useMemo } from "react";
+import { BaseSyntheticEvent, useMemo, useState } from "react";
 
 // Component imports
 import Image from "custom/Image";
+import RarityStars from "custom/RarityStars";
 import SearchBar from "custom/SearchBar";
-import { StyledMenuItem } from "styled/StyledMenu";
+import Dropdown from "custom/Dropdown";
+import ToggleButtons from "custom/ToggleButtons";
 import { TextStyled } from "styled/StyledTypography";
 
 // MUI imports
-import { useTheme, Autocomplete, Stack } from "@mui/material";
+import { useTheme, useMediaQuery, Stack, StackProps } from "@mui/material";
 
 // Helper imports
+import { sortBy } from "helpers/utils";
 import { useAppDispatch, useAppSelector } from "helpers/hooks";
 import { selectWeapons } from "reducers/weapon";
-import { getSelectedWeapons, setPlannerWeapons } from "reducers/planner";
+import {
+    addItem,
+    getSelectedWeapons,
+    setPlannerWeapons,
+} from "reducers/planner";
+import { rarities, paths } from "data/common";
 import { getBackgroundColor, getRarityColor } from "helpers/rarityColors";
 import { getCalyxMaterial } from "data/materials/calyxMaterials";
 import { getCommonMaterial } from "data/materials/commonMaterials";
 
 // Type imports
+import { Path, Rarity } from "types/_common";
 import { Weapon } from "types/weapon";
 import { WeaponCostObject } from "types/costs";
+import { WeaponFilterState } from "reducers/weaponFilters";
 
-function WeaponSelector() {
+const initialFilters: WeaponFilterState = {
+    path: [],
+    rarity: [],
+    calyxMat: [],
+    commonMat: [],
+};
+
+function WeaponSelector({ handleClose }: { handleClose: () => void }) {
     const theme = useTheme();
+    const matches_md_up = useMediaQuery(theme.breakpoints.up("md"));
 
     const dispatch = useAppDispatch();
 
-    const weapons = [...useAppSelector(selectWeapons)].sort(
-        (a, b) =>
-            b.rarity - a.rarity || a.displayName.localeCompare(b.displayName)
+    const weapons = [...useAppSelector(selectWeapons)];
+
+    const options = createOptions(weapons);
+    const selected = useAppSelector(getSelectedWeapons);
+
+    const [searchValue, setSearchValue] = useState("");
+    const handleInputChange = (event: BaseSyntheticEvent) => {
+        setSearchValue(event.target.value);
+    };
+
+    const [filters, setFilters] = useState(initialFilters);
+    const filterGroups = [
+        {
+            name: "Path",
+            value: filters.path,
+            onChange: (_: BaseSyntheticEvent, newValues: Path[]) =>
+                setFilters({ ...filters, path: newValues }),
+            buttons: createButtons(paths, "paths"),
+        },
+        {
+            name: "Rarity",
+            value: filters.rarity,
+            onChange: (_: BaseSyntheticEvent, newValues: Rarity[]) =>
+                setFilters({ ...filters, rarity: newValues }),
+            buttons: rarities.slice(0, -2).map((rarity) => ({
+                value: rarity,
+                label: <RarityStars rarity={rarity} variant="h6-styled" />,
+            })),
+            width: "auto",
+        },
+    ];
+
+    const currentOptions = useMemo(
+        () => filterOptions(options, selected, filters, searchValue),
+        [options, selected, filters, searchValue]
     );
-    const options = useMemo(
-        () => createOptions(weapons),
-        [JSON.stringify(weapons)]
-    );
-    const values = useAppSelector(getSelectedWeapons);
+
+    const handleClick = (option: WeaponCostObject) => {
+        const newValues = [...selected];
+        newValues.push(option);
+        dispatch(setPlannerWeapons(newValues));
+        dispatch(addItem(option.id));
+        handleClose();
+    };
 
     const smallIconStyle = { width: "16px", height: "16px" };
 
+    const stackParams: StackProps = {
+        spacing: 2,
+        direction: "row",
+        alignItems: "center",
+        sx: {
+            p: 1,
+            borderRadius: "4px",
+            backgroundColor: theme.background(0, "dark"),
+            "&:hover": {
+                backgroundColor: theme.background(0, "light"),
+                cursor: "pointer",
+            },
+        },
+    };
+
     return (
-        <Autocomplete
-            multiple
-            autoComplete
-            filterSelectedOptions
-            disableClearable
-            options={options}
-            getOptionLabel={(option) => option.displayName}
-            filterOptions={(options, { inputValue }) =>
-                options.filter(
-                    (option) =>
-                        option.name
-                            .toLocaleLowerCase()
-                            .includes(inputValue.toLocaleLowerCase()) ||
-                        option.displayName
-                            .toLocaleLowerCase()
-                            .includes(inputValue.toLocaleLowerCase())
-                )
-            }
-            noOptionsText="No Light Cones"
-            value={values}
-            isOptionEqualToValue={(option, value) => option.name === value.name}
-            onChange={(event, newValue: WeaponCostObject[] | null, reason) => {
-                if (
-                    event.type === "keydown" &&
-                    ((event as React.KeyboardEvent).key === "Backspace" ||
-                        (event as React.KeyboardEvent).key === "Delete") &&
-                    reason === "removeOption"
-                ) {
-                    return;
-                }
-                dispatch(setPlannerWeapons(newValue as WeaponCostObject[]));
-            }}
-            renderTags={() => null}
-            renderInput={(params) => (
+        <Stack spacing={2}>
+            <Stack spacing={2}>
                 <SearchBar
-                    params={params}
-                    placeholder="Light Cones"
-                    inputIcon={
-                        <Image
-                            src="icons/Lightcone"
-                            alt="Light Cones"
-                            style={{
-                                width: "32px",
-                                marginLeft: "4px",
-                                backgroundColor: theme.appbar.backgroundColor,
-                                borderRadius: "64px",
-                            }}
-                        />
-                    }
+                    placeholder="Search"
+                    value={searchValue}
+                    onChange={handleInputChange}
+                    size={{ height: "36px" }}
                 />
-            )}
-            renderOption={(props, option) => (
-                <StyledMenuItem
-                    {...props}
-                    key={option.name}
-                    sx={{
-                        "&:hover": {
-                            backgroundColor: theme.menu.selectedHover,
-                        },
-                        "&:not(:last-child)": {
-                            borderBottom: `1px solid ${theme.border.color.primary}`,
-                        },
-                    }}
-                >
-                    <Stack spacing={2} direction="row" alignItems="center">
-                        <Stack
-                            spacing={1}
-                            sx={{
-                                p: "4px",
-                                borderRadius: "16px",
-                                backgroundColor: theme.appbar.backgroundColor,
-                            }}
-                        >
-                            <Image
-                                src={`paths/${option.path}`}
-                                alt={option.path}
-                                style={smallIconStyle}
-                                tooltip={option.path}
+                <Dropdown title="Filters">
+                    {filterGroups.map((filter, index) => (
+                        <Stack key={index} spacing={1}>
+                            <ToggleButtons
+                                color="secondary"
+                                buttons={filter.buttons}
+                                value={filter.value}
+                                onChange={filter.onChange}
+                                width={filter.width || undefined}
+                                spacing={4}
+                                padding={
+                                    "label" in filter.buttons[0] ? "0 8px" : 0
+                                }
                             />
                         </Stack>
-                        <Image
-                            src={`lightcones/small/${option.name}`}
-                            alt={option.name}
-                            style={{
-                                width: "48px",
-                                height: "48px",
-                                border: `2px solid ${getRarityColor(
-                                    option.rarity
-                                )}`,
-                                borderRadius: theme.mainContentBox.borderRadius,
-                                backgroundColor: theme.background(2),
-                                boxShadow: `inset 0 0 24px 16px ${getBackgroundColor(
-                                    option.rarity
-                                )}`,
-                            }}
-                        />
-                        <TextStyled noWrap>{option.displayName}</TextStyled>
-                    </Stack>
-                </StyledMenuItem>
-            )}
-        />
+                    ))}
+                </Dropdown>
+            </Stack>
+            <Stack
+                spacing={1}
+                sx={{
+                    height: "50vh",
+                    maxHeight: "600px",
+                    overflowY: "auto",
+                }}
+            >
+                {currentOptions.length > 0 ? (
+                    currentOptions.map((option) => (
+                        <Stack
+                            key={option.id}
+                            {...stackParams}
+                            onClick={() => handleClick(option)}
+                        >
+                            <Stack
+                                spacing={1}
+                                sx={{
+                                    p: "4px",
+                                    borderRadius: "16px",
+                                    backgroundColor:
+                                        theme.appbar.backgroundColor,
+                                }}
+                            >
+                                <Image
+                                    src={`paths/${option.path}`}
+                                    alt={option.path}
+                                    style={smallIconStyle}
+                                    tooltip={option.path}
+                                />
+                            </Stack>
+                            <Image
+                                src={`lightcones/small/${option.name}`}
+                                alt={option.name}
+                                style={{
+                                    width: "48px",
+                                    height: "48px",
+                                    border: `2px solid ${getRarityColor(
+                                        option.rarity
+                                    )}`,
+                                    borderRadius:
+                                        theme.mainContentBox.borderRadius,
+                                    backgroundColor: theme.background(2),
+                                    boxShadow: `inset 0 0 24px 16px ${getBackgroundColor(
+                                        option.rarity
+                                    )}`,
+                                }}
+                            />
+                            <TextStyled
+                                variant={
+                                    matches_md_up
+                                        ? "body1-styled"
+                                        : "body2-styled"
+                                }
+                                noWrap
+                            >
+                                {option.displayName}
+                            </TextStyled>
+                        </Stack>
+                    ))
+                ) : (
+                    <TextStyled sx={{ textAlign: "center" }}>
+                        No weapons
+                    </TextStyled>
+                )}
+            </Stack>
+        </Stack>
     );
 }
 
@@ -193,4 +253,51 @@ function createOptions(weapons: Weapon[]) {
                 dataFormat: "v2",
             } as WeaponCostObject)
     );
+}
+
+function filterOptions(
+    weapons: WeaponCostObject[],
+    selected: WeaponCostObject[],
+    filters: WeaponFilterState,
+    searchValue: string
+) {
+    let weps: WeaponCostObject[];
+    weps = weapons.filter(
+        (wep) => !selected.map((wep) => wep.id).includes(wep.id)
+    );
+    if (filters.path.length > 0) {
+        weps = weps.filter((wep) => filters.path.includes(wep.path));
+    }
+    if (filters.rarity.length > 0) {
+        weps = weps.filter((wep) => filters.rarity.includes(wep.rarity));
+    }
+    if (searchValue !== "") {
+        weps = weps.filter(
+            (wep) =>
+                wep.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+                wep.displayName
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase())
+        );
+    }
+    weps = weps.sort(
+        (a, b) =>
+            sortBy(a.rarity, b.rarity) || sortBy(b.displayName, a.displayName)
+    );
+
+    return weps;
+}
+
+function createButtons<T extends string>(items: readonly T[], url: string) {
+    return items.map((item) => ({
+        value: item,
+        icon: url && (
+            <Image
+                src={`${url}/${item}`}
+                alt={`${item}`}
+                style={{ width: "32px", padding: "4px", borderRadius: "4px" }}
+                tooltip={item}
+            />
+        ),
+    }));
 }
