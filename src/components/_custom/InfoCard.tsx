@@ -42,6 +42,7 @@ interface InfoCardProps {
     disableLink?: boolean;
     disableZoomOnHover?: boolean;
     loading?: boolean;
+    imgLoad?: "lazy" | "eager";
 }
 
 function InfoCard({
@@ -60,6 +61,7 @@ function InfoCard({
     disableLink = false,
     disableZoomOnHover = variant === "material-card",
     loading = false,
+    imgLoad = "eager",
 }: InfoCardProps) {
     const theme = useTheme();
 
@@ -179,6 +181,7 @@ function InfoCard({
                                         alt={name}
                                         id={`${id}-img`}
                                         style={imageStyle}
+                                        loading={imgLoad}
                                     />
                                 </RouterLink>
                                 {variant === "material-card" && materials && (
