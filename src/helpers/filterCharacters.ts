@@ -1,6 +1,9 @@
 import { Character } from "types/character";
 import { CharacterFilterState } from "reducers/characterFilters";
 import { BrowserSettings } from "reducers/browser";
+import { createDateObject } from "./dates";
+import { sortBy } from "./utils";
+import { ElementMap, PathMap } from "data/common";
 
 export function filterCharacters(
     characters: Character[],
@@ -52,39 +55,58 @@ export function filterCharacters(
         );
     }
 
+    const reverse = sortSettings.sortDirection === "desc";
+
     switch (sortSettings.sortBy) {
         case "name":
             chars = chars.sort((a, b) => a.fullName.localeCompare(b.fullName));
+            if (reverse) {
+                chars = chars.reverse();
+            }
             break;
         case "rarity":
             chars = chars.sort(
                 (a, b) =>
-                    b.rarity - a.rarity || a.fullName.localeCompare(b.fullName)
+                    sortBy(a.rarity, b.rarity, reverse) ||
+                    sortBy(b.fullName, a.fullName)
             );
             break;
         case "element":
             chars = chars.sort(
                 (a, b) =>
-                    a.element.localeCompare(b.element) ||
-                    a.fullName.localeCompare(b.fullName)
+                    sortBy(
+                        ElementMap[b.element],
+                        ElementMap[a.element],
+                        reverse
+                    ) ||
+                    sortBy(a.rarity, b.rarity) ||
+                    sortBy(b.fullName, a.fullName)
             );
             break;
         case "path":
             chars = chars.sort(
                 (a, b) =>
-                    a.path.localeCompare(b.path) ||
-                    a.fullName.localeCompare(b.fullName)
+                    sortBy(PathMap[b.path], PathMap[a.path], reverse) ||
+                    sortBy(a.rarity, b.rarity) ||
+                    sortBy(b.fullName, a.fullName)
             );
             break;
         case "release":
             chars = chars.sort(
-                (a, b) => b.id - a.id || a.fullName.localeCompare(b.fullName)
+                (a, b) =>
+                    sortBy(
+                        createDateObject({
+                            date: a.release.date,
+                        }).obj.getTime(),
+                        createDateObject({
+                            date: b.release.date,
+                        }).obj.getTime(),
+                        reverse
+                    ) ||
+                    sortBy(b.rarity, a.rarity, !reverse) ||
+                    sortBy(b.fullName, a.fullName, !reverse)
             );
             break;
-    }
-
-    if (sortSettings.sortDirection === "desc") {
-        chars = chars.reverse();
     }
 
     return chars;

@@ -1,6 +1,8 @@
 import { WeaponFilterState } from "reducers/weaponFilters";
 import { Weapon } from "types/weapon";
 import { BrowserSettings } from "reducers/browser";
+import { sortBy } from "./utils";
+import { PathMap } from "data/common";
 
 export function filterWeapons(
     weapons: Weapon[],
@@ -35,38 +37,43 @@ export function filterWeapons(
         );
     }
 
+    const reverse = sortSettings.sortDirection === "desc";
+
     switch (sortSettings.sortBy) {
         case "name":
             weps = weps.sort((a, b) =>
                 a.displayName.localeCompare(b.displayName)
             );
+            if (reverse) {
+                weps = weps.reverse();
+            }
             break;
         case "rarity":
             weps = weps.sort(
                 (a, b) =>
-                    b.rarity - a.rarity ||
-                    a.displayName.localeCompare(b.displayName)
+                    sortBy(a.rarity, b.rarity, reverse) ||
+                    sortBy(b.displayName, a.displayName)
             );
             break;
         case "path":
             weps = weps.sort(
                 (a, b) =>
-                    a.path.localeCompare(b.path) ||
-                    a.displayName.localeCompare(b.displayName)
+                    sortBy(PathMap[b.path], PathMap[a.path], reverse) ||
+                    sortBy(a.rarity, b.rarity) ||
+                    sortBy(b.displayName, a.displayName)
             );
             break;
         case "release":
             weps = weps.sort(
                 (a, b) =>
-                    b.id - a.id || a.displayName.localeCompare(b.displayName)
+                    sortBy(a.release.version, b.release.version, reverse) ||
+                    sortBy(b.rarity, a.rarity, !reverse) ||
+                    sortBy(a.id, b.id, reverse) ||
+                    sortBy(b.displayName, a.displayName, !reverse)
             );
             break;
         case "element":
             break;
-    }
-
-    if (sortSettings.sortDirection === "desc") {
-        weps = weps.reverse();
     }
 
     return weps;

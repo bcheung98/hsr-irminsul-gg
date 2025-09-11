@@ -7,6 +7,15 @@ export const elements = [
     "Quantum",
     "Imaginary",
 ] as const;
+export enum ElementMap {
+    "Physical",
+    "Fire",
+    "Ice",
+    "Lightning",
+    "Wind",
+    "Quantum",
+    "Imaginary",
+}
 
 export const paths = [
     "Destruction",
@@ -18,6 +27,16 @@ export const paths = [
     "Abundance",
     "Remembrance",
 ] as const;
+export enum PathMap {
+    "Destruction",
+    "Hunt",
+    "Erudition",
+    "Harmony",
+    "Nihility",
+    "Preservation",
+    "Abundance",
+    "Remembrance",
+}
 
 export const rarities = [5, 4, 3, 2, 1] as const;
 
