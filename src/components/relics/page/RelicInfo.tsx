@@ -19,9 +19,10 @@ import {
 
 // Helper imports
 import { objectKeys } from "helpers/utils";
+import { formatPieceType, formatSetEffectKeys } from "helpers/relics";
 
 // Type imports
-import { Relic, RelicPiece, RelicProps } from "types/relic";
+import { RelicProps } from "types/relic";
 
 function RelicInfo({ relic }: RelicProps) {
     const theme = useTheme();
@@ -176,30 +177,3 @@ function RelicInfo({ relic }: RelicProps) {
 }
 
 export default RelicInfo;
-
-function formatPieceType(type: RelicPiece) {
-    switch (type) {
-        case "head":
-            return "Head";
-        case "hand":
-            return "Hands";
-        case "body":
-            return "Body";
-        case "feet":
-            return "Feet";
-        case "orb":
-            return "Planar Sphere";
-        case "rope":
-            return "Link Rope";
-    }
-    return type;
-}
-
-function formatSetEffectKeys(key: keyof Relic["setEffect"]) {
-    switch (key) {
-        case "twoPiece":
-            return "2-Piece Set";
-        case "fourPiece":
-            return "4-Piece Set";
-    }
-}

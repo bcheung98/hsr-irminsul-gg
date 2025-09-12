@@ -1,6 +1,7 @@
 import { useState, BaseSyntheticEvent, useMemo } from "react";
 
 // Component imports
+import RelicListRow from "./RelicListRow";
 import InfoCard from "custom/InfoCard";
 import Image from "custom/Image";
 import SearchBar from "custom/SearchBar";
@@ -8,11 +9,15 @@ import ToggleButtons, { CustomToggleButtonProps } from "custom/ToggleButtons";
 import { TextStyled } from "styled/StyledTypography";
 
 // MUI imports
+import { Card } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import ViewCompactIcon from "@mui/icons-material/ViewCompact";
+import TableRowsIcon from "@mui/icons-material/TableRows";
 
 // Helper imports
-import { useAppSelector } from "helpers/hooks";
+import { useAppDispatch, useAppSelector } from "helpers/hooks";
 import { selectCavernRelics, selectPlanarRelics } from "reducers/relic";
+import { selectBrowserSettings, setBrowserView, View } from "reducers/browser";
 
 // Type imports
 import { Relic } from "types/relic";
@@ -31,17 +36,46 @@ function RelicBrowser() {
         .querySelector('meta[property="og:description"]')
         ?.setAttribute("content", documentDesc);
 
-    const [view, setView] = useState<("cavern" | "planar")[]>([
-        "cavern",
-        "planar",
-    ]);
-    const handleView = (
+    const dispatch = useAppDispatch();
+
+    const browserSettings = useAppSelector(selectBrowserSettings).artifacts;
+
+    const [type, setType] = useState<"cavern" | "planar">("cavern");
+    const handleType = (
         _: BaseSyntheticEvent,
-        newView: ("cavern" | "planar")[]
+        newType: "cavern" | "planar"
     ) => {
-        setView(newView);
+        if (newType !== null) {
+            setType(newType);
+            setSearchValue("");
+        }
     };
-    const buttons: CustomToggleButtonProps[] = [
+
+    const cavernRelics = [...useAppSelector(selectCavernRelics)].sort((a, b) =>
+        a.displayName.localeCompare(b.displayName)
+    );
+    const planarRelics = [...useAppSelector(selectPlanarRelics)].sort((a, b) =>
+        a.displayName.localeCompare(b.displayName)
+    );
+    const relics: Relic[] = [];
+    if (type.includes("cavern")) {
+        relics.push(...cavernRelics);
+    }
+    if (type.includes("planar")) {
+        relics.push(...planarRelics);
+    }
+
+    const [searchValue, setSearchValue] = useState("");
+    const handleInputChange = (event: BaseSyntheticEvent) => {
+        setSearchValue(event.target.value);
+    };
+
+    const currentRelics = useMemo(
+        () => filterRelics(relics, searchValue),
+        [relics, searchValue]
+    );
+
+    const typeButtons: CustomToggleButtonProps[] = [
         {
             value: "cavern",
             icon: (
@@ -66,29 +100,24 @@ function RelicBrowser() {
         },
     ];
 
-    const cavernRelics = [...useAppSelector(selectCavernRelics)].sort((a, b) =>
-        a.displayName.localeCompare(b.displayName)
-    );
-    const planarRelics = [...useAppSelector(selectPlanarRelics)].sort((a, b) =>
-        a.displayName.localeCompare(b.displayName)
-    );
-    const relics: Relic[] = [];
-    if (view.includes("cavern")) {
-        relics.push(...cavernRelics);
-    }
-    if (view.includes("planar")) {
-        relics.push(...planarRelics);
-    }
-
-    const [searchValue, setSearchValue] = useState("");
-    const handleInputChange = (event: BaseSyntheticEvent) => {
-        setSearchValue(event.target.value);
+    const currentView = browserSettings.view;
+    const [view, setView] = useState<View>(currentView);
+    const handleView = (_: BaseSyntheticEvent, view: View) => {
+        if (view !== null) {
+            setView(view);
+            dispatch(setBrowserView({ type: "artifacts", view }));
+        }
     };
-
-    const currentRelics = useMemo(
-        () => filterRelics(relics, searchValue),
-        [relics, searchValue]
-    );
+    const viewButtons: CustomToggleButtonProps[] = [
+        {
+            value: "icon",
+            icon: <ViewCompactIcon />,
+        },
+        {
+            value: "table",
+            icon: <TableRowsIcon />,
+        },
+    ];
 
     return (
         <>
@@ -103,11 +132,22 @@ function RelicBrowser() {
                         Relics
                     </TextStyled>
                 </Grid>
-                <Grid size={{ xs: 6, sm: "auto" }}>
+                <Grid size={{ xs: 3, sm: "auto" }}>
                     <ToggleButtons
                         color="primary"
-                        buttons={buttons}
+                        buttons={typeButtons}
+                        value={type}
+                        exclusive
+                        onChange={handleType}
+                        highlightOnHover={false}
+                    />
+                </Grid>
+                <Grid size={{ xs: 3, sm: "auto" }}>
+                    <ToggleButtons
+                        color="primary"
+                        buttons={viewButtons}
                         value={view}
+                        exclusive
                         onChange={handleView}
                         highlightOnHover={false}
                     />
@@ -121,18 +161,27 @@ function RelicBrowser() {
                     />
                 </Grid>
             </Grid>
-            <Grid container spacing={3}>
-                {currentRelics.map((relic, index) => (
-                    <InfoCard
-                        key={index}
-                        id={`${relic.name}-relicBrowser`}
-                        name={relic.name}
-                        displayName={relic.displayName}
-                        type="relic"
-                        rarity={relic.rarity}
-                    />
-                ))}
-            </Grid>
+            {view === "icon" && (
+                <Grid container spacing={3}>
+                    {currentRelics.map((relic, index) => (
+                        <InfoCard
+                            key={index}
+                            id={`${relic.name}-relicBrowser`}
+                            name={relic.name}
+                            displayName={relic.displayName}
+                            type="relic"
+                            rarity={relic.rarity}
+                        />
+                    ))}
+                </Grid>
+            )}
+            {view === "table" && (
+                <Card>
+                    {currentRelics.map((relic, index) => (
+                        <RelicListRow key={index} relic={relic} index={index} />
+                    ))}
+                </Card>
+            )}
         </>
     );
 }
@@ -140,8 +189,9 @@ function RelicBrowser() {
 export default RelicBrowser;
 
 function filterRelics(relics: Relic[], searchValue: string) {
+    let results = [];
     if (searchValue !== "") {
-        return relics.filter(
+        results = relics.filter(
             (relic) =>
                 relic.name.toLowerCase().includes(searchValue.toLowerCase()) ||
                 relic.displayName
@@ -149,6 +199,11 @@ function filterRelics(relics: Relic[], searchValue: string) {
                     .includes(searchValue.toLowerCase())
         );
     } else {
-        return relics;
+        results = relics;
     }
+    return results.sort((a, b) =>
+        b.release.version.localeCompare(a.release.version, undefined, {
+            numeric: true,
+        })
+    );
 }
