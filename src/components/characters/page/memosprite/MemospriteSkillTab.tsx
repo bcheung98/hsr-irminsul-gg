@@ -76,13 +76,10 @@ function MemospriteSkillTab({
                             >
                                 <Image
                                     src={
-                                        skill.icon
-                                            ? `characters/skills/${name.toLowerCase()}_${
-                                                  skill.icon
-                                              }`
-                                            : `characters/skills/${name.toLowerCase()}_ms_${skillKey}${
-                                                  index > 0 ? index : ""
-                                              }`
+                                        skill.icon ||
+                                        `characters/skills/${name.toLowerCase()}_ms_${skillKey}${
+                                            index > 0 ? index : ""
+                                        }`
                                     }
                                     alt={skill.name}
                                     style={theme.styles.skillIcon(element)}
