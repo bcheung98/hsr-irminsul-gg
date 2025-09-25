@@ -1,6 +1,7 @@
 export interface Skill {
     name: string;
     description: string;
+    icon?: string;
 }
 
 export interface SkillWithScaling extends Skill {
