@@ -89,6 +89,11 @@ export const skillKeywords: SkillKeywords = {
         description:
             "Multiple targets respectively use attacks on enemy targets in one action.",
     },
+    "out of bounds": {
+        name: "Out-of-Bounds",
+        description:
+            "Neither allies nor enemies can actively select Out-of-Bounds units.",
+    },
     "res pen": {
         name: "RES PEN",
         description:
