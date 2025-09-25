@@ -132,6 +132,7 @@ export const lightThemeData = {
         description: "rgb(16, 16, 16)",
         highlight: "rgb(0, 0, 0)",
         highlight2: "#CA9C00",
+        special: "#A7469B",
         star: "rgb(255, 208, 112)",
         header: "#FF7800",
         refinement: "#F29E38",

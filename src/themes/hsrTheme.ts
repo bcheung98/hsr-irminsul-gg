@@ -133,6 +133,7 @@ export const hsrThemeData = {
         description: "rgb(205, 205, 205)",
         highlight: "#F29E38",
         highlight2: "#DCC491",
+        special: "#F9B0F0",
         star: "rgb(255, 208, 112)",
         header: "#F29E38",
         refinement: "#F29E38",
