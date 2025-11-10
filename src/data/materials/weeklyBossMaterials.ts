@@ -69,6 +69,16 @@ export const weeklyBossMaterials = [
         rarity: 4,
         release: { version: "3.3" },
     },
+    {
+        id: "weeklyBossMat_7",
+        category: "weeklyBossMat",
+        tag: "Vanquished Flow's Reticence",
+        name: "Vanquished Flow's Reticence",
+        displayName: "Vanquished Flow's Reticence",
+        source: "Irontomb",
+        rarity: 4,
+        release: { version: "3.7" },
+    },
 ] as const;
 
 export const weeklyBossMatNames = weeklyBossMaterials.map((mat) => mat.tag);

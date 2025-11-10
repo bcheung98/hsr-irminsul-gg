@@ -269,6 +269,16 @@ export const bossMaterials = [
         rarity: 4,
         release: { version: "3.5" },
     },
+    {
+        id: "bossMat_27",
+        category: "bossMat",
+        tag: "Radiant Prominence",
+        name: "Radiant Prominence",
+        displayName: "Radiant Prominence",
+        source: "",
+        rarity: 4,
+        release: { version: "3.8" },
+    },
 ] as const;
 
 export const bossMatNames = bossMaterials.map((mat) => mat.tag);
